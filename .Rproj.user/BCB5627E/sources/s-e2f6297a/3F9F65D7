@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585478163990.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3F9F65D7",
+    "lastKnownWriteTime" : 1585478184,
+    "last_content_update" : 1585478184985,
+    "path" : "/cloud/project/R/02_clean.R",
+    "project_path" : "R/02_clean.R",
+    "properties" : {
+        "cursorPosition" : "23,45",
+        "scrollLine" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

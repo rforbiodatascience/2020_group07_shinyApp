@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585478218817.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C55B4E80",
+    "lastKnownWriteTime" : 1585478412,
+    "last_content_update" : 1585478412903,
+    "path" : "/cloud/project/R/05_model_X.R",
+    "project_path" : "R/05_model_X.R",
+    "properties" : {
+        "cursorPosition" : "30,25",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

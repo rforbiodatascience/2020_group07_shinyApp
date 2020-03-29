@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585478189989.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "AD00322A",
+    "lastKnownWriteTime" : 1585478200,
+    "last_content_update" : 1585478200950,
+    "path" : "/cloud/project/R/03_augment.R",
+    "project_path" : "R/03_augment.R",
+    "properties" : {
+        "cursorPosition" : "23,49",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
