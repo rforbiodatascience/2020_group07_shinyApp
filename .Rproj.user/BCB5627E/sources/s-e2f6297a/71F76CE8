@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1585481237359.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "869196409",
+    "id" : "71F76CE8",
+    "lastKnownWriteTime" : 1585482310,
+    "last_content_update" : 1585482310393,
+    "path" : "/cloud/project/DataSet_options.Rmd",
+    "project_path" : "DataSet_options.Rmd",
+    "properties" : {
+        "cursorPosition" : "25,0",
+        "last_setup_crc32" : "e2f6297abb338d19",
+        "scrollLine" : "20",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
