@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Libraries
 
 ```
+## Trello link
+https://trello.com/b/gU6imQR9/r-project
 
 ## Current agenda:
 * Find the interesting datasets
