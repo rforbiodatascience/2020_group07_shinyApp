@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2297813018",
+    "hash" : "0",
     "id" : "9405C4D",
-    "lastKnownWriteTime" : 1585481961,
-    "last_content_update" : 1585481961,
+    "lastKnownWriteTime" : 1585494959,
+    "last_content_update" : 1585494959,
     "path" : "/cloud/project/.gitignore",
     "project_path" : ".gitignore",
     "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [

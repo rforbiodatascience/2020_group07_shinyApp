@@ -13,6 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+## Current agenda:
+* Find the interesting datasets
+
+Deadline for deciding the dataset: 06.04.2020
+
 ## Description
 
 An exploratory RNA-seq analysis of ... dataset as part of the DTU 22100 "R for Data Science" course.
