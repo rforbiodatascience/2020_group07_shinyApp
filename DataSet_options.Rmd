@@ -34,9 +34,9 @@ This data set contains published iTRAQ proteome profiling of 77 breast cancer sa
 #### Data: 
 3 files: expression data fora  set of genes, clinical lablels for patient outcomes and protein categories for clustering, please the an overview of the data below.
 ```{r echo=FALSE, out.width='100%'}
-knitr::include_graphics('Images/breastCancer_file1.PNG')
-knitr::include_graphics('Images/breastCancer_file2.PNG')
-knitr::include_graphics('Images/breastCancer_file3_last.PNG')
+#knitr::include_graphics('Images/breastCancer_file1.PNG')
+#knitr::include_graphics('Images/breastCancer_file2.PNG')
+#knitr::include_graphics('Images/breastCancer_file3_last.PNG')
 ```
 
 ### Airway data
