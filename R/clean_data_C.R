@@ -18,21 +18,44 @@ proteome_data <- read_csv(file = "data/_raw/77_cancer_proteomes_CPTAC_itraq.csv"
 
 # Wrangle data
 # ------------------------------------------------------------------------------
-my_data_clean <- my_data # %>% ...
 
-## drop unused columns
-# clinical data with no protein information
+## Clean clinical data
+clinical_data_clean <- clinical_data %>%
+  mutate(ID = str_remove_all(.$`Complete TCGA ID`, "TCGA-")) %>% # Make ID similar
+  select(-`Complete TCGA ID`) %>% # Remove old column
+  select(ID, everything())        # ID column first
 
-## Get id first in every tibble
-#select(ID, everything())
+### TODO: Drop unused columns
+### TODO: Make columns that er female/male positive/negative binary?
+### TODO: Remove clinical data with no protein information
+### TODO: NAN values (delete obs with na values, or try to estimate it (median value?))
 
-## Change the protein data sample names to a format matching the clinical data set
+## Clean proteome data
+proteome_data_clean <- proteome_data
+names(proteome_data_clean)[-1] <- sub("\\..*", "", names(proteome_data_clean)[-1])
+### Probably not how it should be done?? Since it doesnt use >%>.
+#proteome_data_clean <- proteome_data %>%
+  
+### TODO: IDs is NOT in long format!
+### TODO: NAN values (delete obs with na values, or try to estimate it (median value?))
 
-## Wide/long?
+## Clean PAM50 data
+#PAM50_clean <- PAM50 %>%
 
-# join tables
 
-# NAN values
+## join tables? when proteome_data_clean is long as it should, with an ID column.
+#joined_data <- left_join(clinical_data_clean, proteome_data_clean, by="ID")
+
+
+## Useful code for later:
+### NA values
+#data %>%
+#  filter(complete.cases(.))
+# negate with ! to check
+# delete obs with na in some columns
+##data %>%
+#  filter(is.na(ID))
+
 
 # Write data
 # ------------------------------------------------------------------------------
