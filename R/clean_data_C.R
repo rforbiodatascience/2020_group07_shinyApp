@@ -12,11 +12,27 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-my_data <- read_tsv(file = "data/01_my_data.tsv")
+clinical_data <- read_csv(file = "data/_raw/clinical_data_breast_cancer.csv")
+PAM50 <- read_csv(file = "data/_raw/PAM50_proteins.csv")
+proteome_data <- read_csv(file = "data/_raw/77_cancer_proteomes_CPTAC_itraq.csv")
 
 # Wrangle data
 # ------------------------------------------------------------------------------
 my_data_clean <- my_data # %>% ...
+
+## drop unused columns
+# clinical data with no protein information
+
+## Get id first in every tibble
+#select(ID, everything())
+
+## Change the protein data sample names to a format matching the clinical data set
+
+## Wide/long?
+
+# join tables
+
+# NAN values
 
 # Write data
 # ------------------------------------------------------------------------------

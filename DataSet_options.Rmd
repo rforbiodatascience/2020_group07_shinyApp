@@ -19,6 +19,7 @@ https://trello.com/b/gU6imQR9/r-project
 * Find the interesting datasets
 
 Deadline for deciding the dataset: 06.04.2020
+Deadline for cleaning the dataset: 13.04.2020
 
 ## Description
 
@@ -37,6 +38,10 @@ This data set contains published iTRAQ proteome profiling of 77 breast cancer sa
 #knitr::include_graphics('Images/breastCancer_file1.PNG')
 #knitr::include_graphics('Images/breastCancer_file2.PNG')
 #knitr::include_graphics('Images/breastCancer_file3_last.PNG')
+
+### Research questions:
+Supervised learning: Selection of feature importances
+
 ```
 
 ### Airway data
