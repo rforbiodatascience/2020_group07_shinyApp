@@ -11,7 +11,10 @@ Current agenda:
 -   Clean datasets
 
 Deadline for deciding the dataset: 06.04.2020
+
 Deadline for cleaning the dataset: 13.04.2020
+
+Deadline for trying to do some EDA: 20.04.2020
 
 Tasks done:
 --------------------
@@ -25,6 +28,7 @@ An exploratory proteome analysis of breast cancer proteomes dataset as part of t
 Research questions
 --------------------
 Supervised learning: Selection of feature importances
+
 Machine learning classification (e.g. k-means)
 
 Datasets
