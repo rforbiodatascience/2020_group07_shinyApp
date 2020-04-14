@@ -24,7 +24,7 @@ PAM50_clean <- PAM50 %>%
   select(RefSeqProteinID, everything()) %>% # ID column first
   rename(RefSeq_accession_number = "RefSeqProteinID",
          gene_symbol = "GeneSymbol",
-         gene_name = "Gene Name") # Rename so its similiar column names as in proteome_data
+         gene_name = "Gene Name") # Rename columns to similiar column names as in proteome_data
 
 # There is no NA numbers
 colSums(is.na(PAM50_clean))
@@ -32,9 +32,9 @@ colSums(is.na(PAM50_clean))
 ## Clean proteome data
 # identify patient_ID replicates 
 replicates <- colnames(proteome_data) %>% 
-  str_replace_all(., '\\..*', '') %>% 
-  duplicated() %>% 
-  colnames(proteome_data)[.]
+  str_replace_all(., '\\..*', '') %>% # Simplify ID name
+  duplicated() %>% # Find replicates (true/false)
+  colnames(proteome_data)[.] # Extract replicate column names (excluding first apperance)
 
 ### TODO: calculate average (pooling) instead of deleting replicates
 
@@ -45,11 +45,16 @@ proteome_data_clean <- proteome_data %>%
   rename_all(funs(stringr::str_replace_all(., '\\..*', ''))) %>% # Simplify ID name
   pivot_longer(cols = -c("RefSeq_accession_number"),
                names_to = "patient_ID",
-               values_to = "value") %>% # Make tibble long
-  mutate(RefSeq_accession_number = factor(RefSeq_accession_number)) # Factor ID
+               values_to = "value") %>% # Make proteins (variables) the columns
+  pivot_wider(names_from = "RefSeq_accession_number",
+              values_from = "value") #%>% # Make patient_ID (observations) the rows
+  #mutate(patient_ID = factor(patient_ID)) # Factor ID (? I dunno why, did it because Leon does it)
 
 # Should NAs be replaced with zeroes? Or maybe estimate them with median values?
 colSums(is.na(proteome_data_clean))
+
+# Or maybe just delete them?
+#   filter(!is.na(value))
 
 ## Clean clinical data
 clinical_data_clean <- clinical_data %>%
@@ -57,6 +62,8 @@ clinical_data_clean <- clinical_data %>%
   select(-`Complete TCGA ID`) %>% # Remove old ID column
   semi_join(., proteome_data_clean, by = "patient_ID") %>% # Remove clinical data with no protein information
   select(patient_ID, everything()) # ID column first
+
+names(clinical_data_clean) <- gsub(" ", "_", names(clinical_data_clean)) # Remove whitespaces in column names
   
 # There is only NA values in days to date of death for living people
 colSums(is.na(clinical_data_clean))
@@ -66,15 +73,15 @@ colSums(is.na(clinical_data_clean))
 ### TODO: Make columns that are female/male and positive/negative binary? 
 ### - (if it make sense in the analysis, then insert the code below)
 
+### Make something binary
+#mutate(gender_bin = case_when(gender == "female" ~ 1,
+#                              gender == "male" ~ 0))
+
 #________________________________________________________________________
 
 ### should we join tables? only if it make sense later...
 joined_data <- left_join(clinical_data_clean, proteome_data_clean, by="patient_ID")
 
-#________________________________________________________________________
-### Make something binary
-#mutate(gender_bin = case_when(gender == "female" ~ 1,
-#                              gender == "male" ~ 0))
 #________________________________________________________________________
 
 
@@ -87,4 +94,8 @@ write_csv(x = PAM50_clean,
           path = "data/02_PAM50_clean.csv")
 
 write_csv(x = proteome_data_clean,
-          path = "data/proteome_data_clean.csv")
+          path = "data/02_proteome_data_clean.csv")
+
+write_csv(x = joined_data,
+          path = "data/02_joined_data_clean.csv")
+
