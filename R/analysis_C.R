@@ -41,7 +41,7 @@ ggplot(data = proteome_data_aug, mapping = aes(x = NP_057427, y = NP_002408)) +
 # PCA ---------------------------------------------------------------------------
 proteome_pca <- proteome_data_aug %>%
   select(-patient_ID) %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>%
+  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>% # Take median value of NA values
   prcomp(center = TRUE, scale = TRUE)
 
 proteome_pca %>%

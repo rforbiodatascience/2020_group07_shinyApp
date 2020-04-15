@@ -41,6 +41,7 @@ replicates <- colnames(proteome_data) %>%
 proteome_data_clean <- proteome_data %>%
   select(-gene_symbol, -gene_name) %>% # Remove redundant columns
   select(-replicates)  %>% # Remove replicate columns
+  select(-c(ends_with("CPTAC")))  %>%  # Remove healthy patients (we have no clincal information on them)
   semi_join(., PAM50_clean, by = "RefSeq_accession_number") %>% # Remove non-PAM50 proteins
   rename_all(funs(stringr::str_replace_all(., '\\..*', ''))) %>% # Simplify ID name
   pivot_longer(cols = -c("RefSeq_accession_number"),
@@ -64,7 +65,8 @@ clinical_data_clean <- clinical_data %>%
   select(patient_ID, everything()) # ID column first
 
 names(clinical_data_clean) <- gsub(" ", "_", names(clinical_data_clean)) # Remove whitespaces in column names
-  
+names(clinical_data_clean) <- gsub("-", "_", names(clinical_data_clean)) # Remove dash in column names
+
 # There is only NA values in days to date of death for living people
 colSums(is.na(clinical_data_clean))
 
