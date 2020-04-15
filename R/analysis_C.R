@@ -38,6 +38,10 @@ ggplot(data = clincal_data_aug, mapping = aes(x = Age_at_Initial_Pathologic_Diag
 ggplot(data = proteome_data_aug, mapping = aes(x = NP_057427, y = NP_002408)) + 
   geom_point()
 
+# View class distribution
+joined_data_aug %>% count(PAM50_mRNA) %>% print
+joined_data_aug %>% count(Tumor) %>% print
+
 # PCA ---------------------------------------------------------------------------
 proteome_pca <- proteome_data_aug %>%
   select(-patient_ID) %>%
@@ -68,7 +72,7 @@ proteome_pca <- proteome_data_aug %>%
 
 proteome_pca_aug <- proteome_pca %>%
   augment(proteome_data_aug) %>%
-  mutate(PAM50_mRNA = joined_data_aug$PAM50_mRNA)
+  mutate(PAM50_mRNA = joined_data_aug$Tumor)
 
 proteome_pca_aug %>% 
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = patient_ID, color = PAM50_mRNA)) +
