@@ -46,12 +46,12 @@ joined_data_aug %>% count(PAM50_mRNA_bin) %>% print
 
 # Define training and test feature matrices
 X_train = joined_data_aug %>%
-  filter(data_type > 2) %>%
+  filter(data_type > 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
          
 X_test = joined_data_aug %>%
-  filter(data_type == 2) %>%
+  filter(data_type <= 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
   
@@ -60,15 +60,14 @@ X_test = joined_data_aug %>%
 
 # Define known target classes for training and test data
 y_train = joined_data_aug %>%
-  filter(data_type > 2 ) %>%
+  filter(data_type > 3 ) %>%
   pull(PAM50_mRNA_bin) %>% 
   to_categorical
 y_test = joined_data_aug %>%
-  filter(data_type == 2 ) %>%
+  filter(data_type <= 3 ) %>%
   pull(PAM50_mRNA_bin) %>% 
   to_categorical
 
-# SOMEHOW THERE IS STILL MISSING VALUES, OR NON NUMERIC
 
 # Define ANN model
 # ------------------------------------------------------------------------------
@@ -77,18 +76,18 @@ y_test = joined_data_aug %>%
 n_hidden_1 = 43
 h1_activate = 'relu'
 drop_out_1 = 0.4
-n_hidden_2 = 20
+n_hidden_2 = 40
 h2_activate = 'relu'
 drop_out_2 = 0.3
-n_hidden_3 = 10
+n_hidden_3 = 20
 h3_activate = 'relu'
 drop_out_3 = 0.2
-n_hidden_4 = 5
+n_hidden_4 = 10
 h4_activate = 'relu'
 drop_out_4 = 0.1
 n_output   = 4
 o_ativate  = 'softmax'
-n_epochs = 15
+n_epochs = 250
 batch_size = 50
 loss_func = 'categorical_crossentropy'
 learn_rate = 0.001
@@ -128,6 +127,8 @@ history = model %>%
 
 # Evaluate model
 # ------------------------------------------------------------------------------
+# OBS THIS ONLY WORKS IF ALL CLASSES IS PRESENT IN y_test 
+# OTHERWISE, THE FACTORING GOES WRONG.
 perf_test = model %>% evaluate(X_test, y_test)
 acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
 perf_train = model %>% evaluate(X_train, y_train)

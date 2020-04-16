@@ -51,11 +51,9 @@ proteome_data_clean <- proteome_data %>%
               values_from = "value") #%>% # Make patient_ID (observations) the rows
   #mutate(patient_ID = factor(patient_ID)) # Factor ID (? I dunno why, did it because Leon does it)
 
-# Should NAs be replaced with zeroes? Or maybe estimate them with median values?
+# Should NAs be replaced with zeroes? Or maybe estimate them with median values? 
+# Depends on the analysis later
 colSums(is.na(proteome_data_clean))
-
-# Or maybe just delete them?
-#   filter(!is.na(value))
 
 ## Clean clinical data
 clinical_data_clean <- clinical_data %>%
@@ -72,16 +70,9 @@ colSums(is.na(clinical_data_clean))
 
 ### TODO: Drop unused columns 
 ### - (We only know this for sure at the end of the analysis)
-### TODO: Make columns that are female/male and positive/negative binary? 
-### - (if it make sense in the analysis, then insert the code below)
 
-### Make something binary
-#mutate(gender_bin = case_when(gender == "female" ~ 1,
-#                              gender == "male" ~ 0))
 
-#________________________________________________________________________
-
-### should we join tables? only if it make sense later...
+### Join clinical and proteome data
 joined_data <- left_join(clinical_data_clean, proteome_data_clean, by="patient_ID")
 
 #________________________________________________________________________

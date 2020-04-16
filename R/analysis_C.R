@@ -20,11 +20,11 @@ joined_data_aug <- read_csv(file = "data/02_joined_data_clean.csv")
 
 # Wrangle data
 # ------------------------------------------------------------------------------
-my_data_clean_aug %>% ...
+#my_data_clean_aug %>% ...
 
 # Model data
 # ------------------------------------------------------------------------------
-my_data_clean_aug %>% ...
+#my_data_clean_aug %>% ...
 
 # Visualise data
 # ------------------------------------------------------------------------------
@@ -43,11 +43,12 @@ joined_data_aug %>% count(PAM50_mRNA) %>% print
 joined_data_aug %>% count(Tumor) %>% print
 
 # PCA ---------------------------------------------------------------------------
-proteome_pca <- proteome_data_aug %>%
-  select(-patient_ID) %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>% # Take median value of NA values
-  prcomp(center = TRUE, scale = TRUE)
 
+proteome_pca <- proteome_data_aug %>%
+  select(starts_with("NP"))  %>%
+  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>%
+  prcomp(center = TRUE, scale = TRUE) 
+  
 proteome_pca %>%
   tidy("pcs") %>% 
   ggplot(aes(x = PC, y = percent)) +
@@ -55,24 +56,8 @@ proteome_pca %>%
   theme_bw()
 
 proteome_pca_aug <- proteome_pca %>%
-  augment(proteome_data_aug)
-
-proteome_pca_aug %>% 
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = patient_ID)) +
-  geom_text() +
-  theme(legend.position = "bottom")
-
-
-#%%%%
-proteome_pca <- proteome_data_aug %>%
-  select(starts_with("NP"))  %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>%
-  prcomp(center = TRUE, scale = TRUE) 
-  
-
-proteome_pca_aug <- proteome_pca %>%
   augment(proteome_data_aug) %>%
-  mutate(PAM50_mRNA = joined_data_aug$Tumor)
+  mutate(PAM50_mRNA = joined_data_aug$PAM50_mRNA)
 
 proteome_pca_aug %>% 
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = patient_ID, color = PAM50_mRNA)) +
