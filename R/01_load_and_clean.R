@@ -6,10 +6,6 @@ rm(list = ls())
 # ------------------------------------------------------------------------------
 library("tidyverse")
 
-# Define functions
-# ------------------------------------------------------------------------------
-source(file = "R/99_project_functions.R")
-
 # Load data
 # ------------------------------------------------------------------------------
 clinical_data <- read_csv(file = "data/_raw/clinical_data_breast_cancer.csv")
@@ -68,4 +64,4 @@ write_csv(x = PAM50_clean,
           path = "data/01_PAM50_clean.csv")
 
 write_csv(x = proteome_data_clean,
-          path = "data/01_proteome_data_clean.csv")
+          path = "data/01_proteome_data_wide_clean.csv")
