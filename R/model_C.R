@@ -87,7 +87,7 @@ h4_activate = 'relu'
 drop_out_4 = 0.1
 n_output   = 4
 o_ativate  = 'softmax'
-n_epochs = 250
+n_epochs = 150
 batch_size = 50
 loss_func = 'categorical_crossentropy'
 learn_rate = 0.001
@@ -162,7 +162,7 @@ title = paste0('Performance of Deep Feed Forward Neural Network (',
 sub_title = paste0("Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ". ",
                    "Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ".")
 xlab  = 'Predicted (Class assigned by Keras/TensorFlow deep FFN)'
-ylab  = 'Measured (Real class, as predicted by netMHCpan-4.0)'
+ylab  = 'Measured (Real class)'
 results %>%
   ggplot(aes(x = y_pred, y = y_true, fill = Correct)) +
   geom_jitter(pch = 21, size = 4, alpha = 0.4, colour = 'black') +
