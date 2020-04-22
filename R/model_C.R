@@ -177,7 +177,10 @@ results %>%
                      values = c('tomato','cornflowerblue')) +
   facet_wrap(~data_type, nrow = 1)
 
+# Save results
+#ggsave(filename = "results/ANN_performance.png",device = "png")
+
 # Save model
 # ------------------------------------------------------------------------------
-save_model_hdf5(object = model,
-                filepath = "Models/05_peptide_model.h5")
+#save_model_hdf5(object = model,
+#                filepath = "Models/05_peptide_model.h5")
