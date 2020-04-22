@@ -30,14 +30,13 @@ PAM50_clean <- PAM50 %>%
 colSums(is.na(PAM50_clean))
 
 ## Clean proteome data
-# identify patient_ID replicates 
+### Identify patient_ID replicates 
 replicates <- colnames(proteome_data) %>% 
   str_replace_all(., '\\..*', '') %>% # Simplify ID name
   duplicated() %>% # Find replicates (true/false)
   colnames(proteome_data)[.] # Extract replicate column names (excluding first apperance)
 
-### TODO: calculate average (pooling) instead of deleting replicates
-
+### Clean file
 proteome_data_clean <- proteome_data %>%
   select(-gene_symbol, -gene_name) %>% # Remove redundant columns
   select(-replicates)  %>% # Remove replicate columns
@@ -49,7 +48,6 @@ proteome_data_clean <- proteome_data %>%
                values_to = "value") %>% # Make proteins (variables) the columns
   pivot_wider(names_from = "RefSeq_accession_number",
               values_from = "value") #%>% # Make patient_ID (observations) the rows
-  #mutate(patient_ID = factor(patient_ID)) # Factor ID (? I dunno why, did it because Leon does it)
 
 # Should NAs be replaced with zeroes? Or maybe estimate them with median values? 
 # Depends on the analysis later
