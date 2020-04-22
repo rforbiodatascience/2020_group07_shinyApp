@@ -16,9 +16,9 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-clincal_data_aug <- read_csv(file = "data/02_clincal_data_clean.csv")
-PAM50_aug <- read_csv(file = "data/02_PAM50_clean.csv")
-proteome_data_aug <- read_csv(file = "data/02_proteome_data_clean.csv")
+clincal_data_aug <- read_csv(file = "data/01_clincal_data_clean.csv")
+PAM50_aug <- read_csv(file = "data/01_PAM50_clean.csv")
+proteome_data_aug <- read_csv(file = "data/02_proteome_data_wide_aug.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_clean.csv")
 
 # View the data

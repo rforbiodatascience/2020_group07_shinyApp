@@ -19,6 +19,11 @@ proteome_data_wide_clean <- read_csv(file = "data/01_proteome_data_wide_clean.cs
 
 # Wrangle data
 # ------------------------------------------------------------------------------
+## Handle NA values in proteome data
+proteome_data_wide_aug = proteome_data_wide_clean %>% 
+  discard(~sum(is.na(.x))/length(.x) >= 0.2) %>% # Remove genes with too many na's (over 20%)
+  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value to replace NA values
+
 ### Join clinical and proteome data
 joined_data <- left_join(clinical_data_clean, proteome_data_wide_clean, by="patient_ID")
 
@@ -31,4 +36,8 @@ joined_data <- left_join(clinical_data_clean, proteome_data_wide_clean, by="pati
 # Write data
 # ------------------------------------------------------------------------------
 write_csv(x = joined_data,
-          path = "data/02_joined_data_clean.csv")
+          path = "data/02_joined_data.csv")
+
+write_csv(x = proteome_data_wide_aug,
+          path = "data/02_proteome_data_wide_aug.csv")
+
