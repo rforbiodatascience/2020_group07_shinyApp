@@ -19,7 +19,7 @@ source(file = "R/99_project_functions.R")
 clincal_data_aug <- read_csv(file = "data/01_clincal_data_clean.csv")
 PAM50_aug <- read_csv(file = "data/01_PAM50_clean.csv")
 proteome_data_aug <- read_csv(file = "data/02_proteome_data_wide_aug.csv")
-joined_data_aug <- read_csv(file = "data/02_joined_data_clean.csv")
+joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # View the data
 proteome_data_aug %>% print
@@ -32,14 +32,13 @@ joined_data_aug %>% count(PAM50_mRNA) %>% print
 # Partition into data_type where test (~10%) and training set (~90%)
 
 joined_data_aug <- joined_data_aug  %>% 
-  mutate(data_type = sample(10, size = nrow(.), replace = TRUE))  %>% 
+  filter(PAM50_mRNA %in% c("Basal-like", "HER2-enriched", "Luminal A", "Luminal B")) %>% # Remove control samples (too few samples in this group)
+  mutate(data_type = sample(10, size = nrow(.), replace = TRUE))  %>% # give a random number between 1 and 10 (to divide data in train and test later)
   mutate(PAM50_mRNA_bin = case_when(PAM50_mRNA == "Basal-like" ~ 0,
                                     PAM50_mRNA == "HER2-enriched" ~ 1,
                                     PAM50_mRNA == "Luminal A" ~ 2,
                                     PAM50_mRNA == "Luminal B" ~ 3)) %>%
-  select(patient_ID, starts_with("NP"),data_type, PAM50_mRNA_bin) %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value of NA values (column-wise)
-
+  select(patient_ID, starts_with("NP"), data_type, PAM50_mRNA_bin) 
 
 joined_data_aug %>% count(PAM50_mRNA_bin) %>% print
 
@@ -179,8 +178,3 @@ results %>%
 
 # Save results
 #ggsave(filename = "results/ANN_performance.png",device = "png")
-
-# Save model
-# ------------------------------------------------------------------------------
-#save_model_hdf5(object = model,
-#                filepath = "Models/05_peptide_model.h5")
