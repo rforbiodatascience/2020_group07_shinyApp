@@ -34,7 +34,7 @@ replicates <- colnames(proteome_data) %>%
 proteome_data_clean <- proteome_data %>%
   select(-gene_symbol, -gene_name) %>% # Remove redundant columns
   select(-replicates)  %>% # Remove replicate columns
-  select(-c(ends_with("CPTAC")))  %>%  # Remove healthy patients (we have no clincal information on them)
+  #select(-c(ends_with("CPTAC")))  %>%  # Remove healthy patients (we have no clincal information on them)
   semi_join(., PAM50_clean, by = "RefSeq_accession_number") %>% # Remove non-PAM50 proteins
   rename_all(funs(stringr::str_replace_all(., '\\..*', ''))) %>% # Simplify ID name
   pivot_longer(cols = -c("RefSeq_accession_number"),

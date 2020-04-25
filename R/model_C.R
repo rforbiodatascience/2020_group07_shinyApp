@@ -38,7 +38,7 @@ joined_data_aug <- joined_data_aug  %>%
                                     PAM50_mRNA == "Luminal A" ~ 2,
                                     PAM50_mRNA == "Luminal B" ~ 3)) %>%
   select(patient_ID, starts_with("NP"),data_type, PAM50_mRNA_bin) %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value of NA values
+  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value of NA values (column-wise)
 
 
 joined_data_aug %>% count(PAM50_mRNA_bin) %>% print

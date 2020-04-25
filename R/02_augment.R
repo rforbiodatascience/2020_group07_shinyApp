@@ -22,11 +22,15 @@ proteome_data_wide_aug = proteome_data_wide_clean %>%
 
 ### Join clinical and proteome data
 joined_data_aug <- proteome_data_wide_clean %>%
-  left_join(clinical_data_clean, ., by="patient_ID")
+  right_join(clinical_data_clean,. , by="patient_ID") #%>%
+  # Deselect all things in clinical data we dont use.
 
+### Add PAM50_mRNA class for control samples
+joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% replace_na("Control") 
 
 ### Make long version of proteome data
-proteome_data_long_aug <- proteome_data_wide_aug
+proteome_data_long_aug <- proteome_data_wide_aug %>%
+  pivot_longer(-patient_ID, names_to = "RefSeq_accession_number", values_to = "value")
 
 
 # Write data
