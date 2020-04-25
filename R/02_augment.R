@@ -21,7 +21,7 @@ proteome_data_wide_aug = proteome_data_wide_clean %>%
   mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value to replace NA values
 
 ### Join clinical and proteome data (wide version)
-joined_data_aug <- proteome_data_wide_clean %>%
+joined_data_wide_aug <- proteome_data_wide_clean %>%
   right_join(clinical_data_clean,. , by="patient_ID") 
 
 ### Add PAM50_mRNA class for control samples
@@ -31,6 +31,13 @@ joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% replace_na("Control
 proteome_data_long_aug <- proteome_data_wide_aug %>%
   pivot_longer(-patient_ID, names_to = "RefSeq_accession_number", values_to = "value")
 
+### Join clinical and proteome data (long version)
+joined_data_long_aug <- proteome_data_long_aug %>%
+  left_join(clinical_data_clean,. , by="patient_ID") %>%
+  select(patient_ID, RefSeq_accession_number, value, everything())
+
+### Add PAM50_mRNA class for control samples
+joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% replace_na("Control") 
 
 
 
