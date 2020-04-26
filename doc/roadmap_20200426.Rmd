@@ -1,6 +1,8 @@
 ---
-title: "Breast Cancer"
-authors: Catrine Høm, Paula Rodríguez, Rebeka Bató, Vlad Grigorjev.
+title: "Breast Cancer Proteomics"
+subtitle: "R for Bio Data Science"
+subsubtitle: "Group 07"
+author: Catrine Høm, Paula Rodríguez, Rebeka Bató, Vlad Grigorjev.
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: ioslides_presentation
 revealjs::revealjs_presentation:
@@ -8,6 +10,7 @@ revealjs::revealjs_presentation:
     highlight: pygments
     center: true
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -40,6 +43,9 @@ pam50_raw_data <- as_tibble(read_csv(file = "../data/_raw/PAM50_proteins.csv"))
 
 
 ## Dataset
+.exclaim .reveal .state-background {
+  background: red;
+} 
 {data-background="doc/Rmd_sup/bckground.jpeg"}
 ```{r}
 knitr::include_graphics("Rmd_sup/article_banner.PNG")
@@ -207,23 +213,24 @@ Explore the gene clustering profiles using Gene ontology PANTHER resourse
 
 < coming (... <dev class= "green"> EXAMPLE ... </dev>) >
 
-```{r}
+```{r, out.width="650px"}
 knitr::include_graphics("../doc/Rmd_sup/GOtest.PNG")
 ```
 
 
-## Modelling data:
+## Modelling data: PCA
+```{r image_grobs, fig.show = "hold", out.width = "50%", fig.align = "default"}
 
-PCA:
-
-
-```{r}
-#knitr::include_graphics("../results/ADD HERE")
+knitr::include_graphics("../results/04_PCA.png")
+knitr::include_graphics("../results/04_scree.png")
 ```
 
+
+
 ## ANN model confusion matrix
+
 ```{r,out.width = "800px"}
-knitr::include_graphics("../results/ANN_performance.png")
+knitr::include_graphics("../results/05_ANN_performance.png")
 ```
 
 
