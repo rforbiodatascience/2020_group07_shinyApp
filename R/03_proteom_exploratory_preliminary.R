@@ -75,69 +75,81 @@ df %>%   select(patient_ID,
 ggsave(filename = "results/density_sample_expression.png",device = "png")
 
 
-# All subtypes
-PAM50_subtypes <- df %>% select(PAM50_mRNA) %>% unique(.) 
-df %>%   select(patient_ID,
-                  starts_with("NP_"),
-                  PAM50_mRNA) %>%
-           filter(.,PAM50_mRNA == as.character(PAM50_subtypes[1,1])) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[1,1])," expression density plot.")) +
-    theme_bw(base_family = "Times", base_size = 10) +
-    theme(legend.position = "center")
-ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[1,1]),".png"),device = "png")
-  
-df %>%   select(patient_ID,
-                  starts_with("NP_"),
-                  PAM50_mRNA) %>%
-    filter(.,PAM50_mRNA ==as.character(PAM50_subtypes[2,1])) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[2,1])," expression density plot.")) +
-    theme_bw(base_family = "Times", base_size = 10) +
-    theme(legend.position = "center")
-ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[1,1]),".png"),device = "png")
-  
-df %>%   select(patient_ID,
-                  starts_with("NP_"),
-                  PAM50_mRNA) %>%
-    filter(.,PAM50_mRNA == as.character(PAM50_subtypes[3,1])) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[3,1])," expression density plot.")) +
-    theme_bw(base_family = "Times", base_size = 10) +
-    theme(legend.position = "center")
-  ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[3,1]),".png"),device = "png")
-  
-  df %>%   select(patient_ID,
-                  starts_with("NP_"),
-                  PAM50_mRNA) %>%
-    filter(.,PAM50_mRNA == as.character(PAM50_subtypes[4,1])) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[4,1])," expression density plot.")) +
-    theme_bw(base_family = "Times", base_size = 10) +
-    theme(legend.position = "center")
-  ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[4,1]),".png"),device = "png")
-  
-for (i in PAM50_subtypes){
-  df %>%   select(patient_ID,
-                  starts_with("NP_"),
-                  PAM50_mRNA) %>%
-    filter(.,PAM50_mRNA %in% i) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(paste("PAM50: ",i," expression density plot.")) +
-    theme_bw(base_family = "Times", base_size = 10) +
-    theme(legend.position = "center")
-  ggsave(filename = paste("03_exploratory_density_TEST",i,".png"),device = "png")
+
+# Try subsetting by iteration using the "tidy" way
+df_PAM50_split <- df %>%
+        group_split(PAM50_mRNA)
+
+# Function for the plot that was used previously
+plot_PAM50_density <- function (data) {
+  title <- data %>% select(PAM50_mRNA) %>% unique(.)
+  data %>%   select(patient_ID,
+                starts_with("NP_"),
+                PAM50_mRNA) %>%
+  pivot_longer(cols = starts_with('NP_')) %>%
+  ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+  geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+  ggtitle(paste0(title,": Density")) +
+  theme_bw(base_family = "Times", base_size = 10) +
+  theme(legend.position = "none")
+  ggsave(filename = paste0("results/03_exploratory_tissue_",title,"_density.png"),device = "png")
 }
+
+# Mappings between the subsets and the plot
+
+plots <- 
+  map(df_PAM50_split, ~plot_PAM50_density(.x))
+# # All subtypes
+# PAM50_subtypes <- df %>% select(PAM50_mRNA) %>% unique(.) 
+# df %>%   select(patient_ID,
+#                   starts_with("NP_"),
+#                   PAM50_mRNA) %>%
+#            filter(.,PAM50_mRNA == as.character(PAM50_subtypes[1,1])) %>%
+#     pivot_longer(cols = starts_with('NP_')) %>%
+#     ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+#     geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#     ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[1,1])," expression density plot.")) +
+#     theme_bw(base_family = "Times", base_size = 10) +
+#     theme(legend.position = "center")
+# ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[1,1]),".png"),device = "png")
+#   
+# df %>%   select(patient_ID,
+#                   starts_with("NP_"),
+#                   PAM50_mRNA) %>%
+#     filter(.,PAM50_mRNA ==as.character(PAM50_subtypes[2,1])) %>%
+#     pivot_longer(cols = starts_with('NP_')) %>%
+#     ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+#     geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#     ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[2,1])," expression density plot.")) +
+#     theme_bw(base_family = "Times", base_size = 10) +
+#     theme(legend.position = "center")
+# ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[1,1]),".png"),device = "png")
+#   
+# df %>%   select(patient_ID,
+#                   starts_with("NP_"),
+#                   PAM50_mRNA) %>%
+#     filter(.,PAM50_mRNA == as.character(PAM50_subtypes[3,1])) %>%
+#     pivot_longer(cols = starts_with('NP_')) %>%
+#     ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+#     geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#     ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[3,1])," expression density plot.")) +
+#     theme_bw(base_family = "Times", base_size = 10) +
+#     theme(legend.position = "center")
+#   ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[3,1]),".png"),device = "png")
+#   
+#   df %>%   select(patient_ID,
+#                   starts_with("NP_"),
+#                   PAM50_mRNA) %>%
+#     filter(.,PAM50_mRNA == as.character(PAM50_subtypes[4,1])) %>%
+#     pivot_longer(cols = starts_with('NP_')) %>%
+#     ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+#     geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#     ggtitle(paste("PAM50: ",as.character(PAM50_subtypes[4,1])," expression density plot.")) +
+#     theme_bw(base_family = "Times", base_size = 10) +
+#     theme(legend.position = "center")
+#   ggsave(filename = paste("03_exploratory_density_",as.character(PAM50_subtypes[4,1]),".png"),device = "png")
+#   
+
 # ------------------------------------------------------------------------------
 df %>%   select(patient_ID,
                 starts_with("NP_"),
@@ -148,4 +160,4 @@ df %>%   select(patient_ID,
   ggtitle("") +
   theme_bw(base_family = "Times", base_size = 10) +
   theme(legend.position = "none")
-ggsave(filename = "results/density_tissue_expression.png",device = "png")
+ggsave(filename = "results/03_exloratory_density_tissue_expression.png",device = "png")

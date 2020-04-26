@@ -219,6 +219,8 @@ The PAM50 classifier is widely used for breast tumor intrinsic subtyping based o
 
 # AIM
 
+The aim of the project is to test various models for their ability to predict breastcancer subclasses based on experssional data obtained in teh study. This data can help drive future diagnostics and potentially help practitioners in accurately diagnose and prescribe treatment based on the data. 
+in addition the project is a way to get hands on exprience in conducting research using reproducible  methodology.
 
 
 # Methodology:

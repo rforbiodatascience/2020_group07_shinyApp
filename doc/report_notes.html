@@ -3036,15 +3036,17 @@ The PAM50 classifier is widely used for breast tumor intrinsic subtyping based o
 </div>
 <div id="joining" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Joining</h3>
+<div id="string-formatting-id-syntax" class="section level4">
+<h4><span class="header-section-number">3.1.2.1</span> String formatting: ID syntax</h4>
+<p>We can combine datasets if the rows share a unique id/reference number; both datasets share a unique id value (Complete TCGA ID). We will use the Complete TCGA ID variable to combine these datasets together. However, the Complete TCGA ID does not entirely match up in the datasets, where AO-A12D.01TCGA = TCGA-AO-A12D. To combine the clinical and proteomes datasets we use the package stringr to manipulate the Complete TCGA ID so that they follow a similar syntax in both datasets
+### Augmenting</p>
 </div>
-<div id="augmenting" class="section level3">
-<h3><span class="header-section-number">3.1.3</span> Augmenting</h3>
 </div>
 <div id="exploratory-analysis" class="section level3">
-<h3><span class="header-section-number">3.1.4</span> Exploratory analysis</h3>
+<h3><span class="header-section-number">3.1.3</span> Exploratory analysis</h3>
 </div>
 <div id="modelling" class="section level3">
-<h3><span class="header-section-number">3.1.5</span> Modelling</h3>
+<h3><span class="header-section-number">3.1.4</span> Modelling</h3>
 </div>
 </div>
 </div>
@@ -3060,7 +3062,7 @@ The PAM50 classifier is widely used for breast tumor intrinsic subtyping based o
 <pre class="r"><code>print(date)</code></pre>
 <pre><code>## function () 
 ## .Internal(date())
-## &lt;bytecode: 0x1dbd670&gt;
+## &lt;bytecode: 0x2fd9158&gt;
 ## &lt;environment: namespace:base&gt;</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.0 (2019-04-26)
