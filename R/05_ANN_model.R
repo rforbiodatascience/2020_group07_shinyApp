@@ -55,8 +55,6 @@ X_test = joined_data_aug %>%
   as_matrix()
   
 
-
-
 # Define known target classes for training and test data
 y_train = joined_data_aug %>%
   filter(data_type > 3 ) %>%

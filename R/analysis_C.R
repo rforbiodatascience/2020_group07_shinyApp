@@ -13,10 +13,10 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-clincal_data_aug <- read_csv(file = "data/02_clincal_data_clean.csv")
-PAM50_aug <- read_csv(file = "data/02_PAM50_clean.csv")
-proteome_data_aug <- read_csv(file = "data/02_proteome_data_clean.csv")
-joined_data_aug <- read_csv(file = "data/02_joined_data_clean.csv")
+clincal_data_aug <- read_csv(file = "data/01_clincal_data_clean.csv")
+PAM50_aug <- read_csv(file = "data/01_PAM50_clean.csv")
+proteome_data_aug <- read_csv(file = "data/02_proteome_data_wide_aug.csv")
+joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # Wrangle data
 # ------------------------------------------------------------------------------
@@ -46,7 +46,6 @@ joined_data_aug %>% count(Tumor) %>% print
 
 proteome_pca <- proteome_data_aug %>%
   select(starts_with("NP"))  %>%
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>%
   prcomp(center = TRUE, scale = TRUE) 
   
 proteome_pca %>%
@@ -60,12 +59,7 @@ proteome_pca_aug <- proteome_pca %>%
   mutate(PAM50_mRNA = joined_data_aug$PAM50_mRNA)
 
 proteome_pca_aug %>% 
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = patient_ID, color = PAM50_mRNA)) +
+  ggplot(aes(x = .fittedPC3, y = .fittedPC, label = patient_ID, color = PAM50_mRNA)) +
   geom_text() +
   theme(legend.position = "bottom")
-  
-# Write data
-# ------------------------------------------------------------------------------
-write_tsv(x = my_data_clean_aug,
-          path = "data/04_my_data_clean_aug_anl.tsv")
-ggsave(...)
+ggsave(filename = "results/PCA_plot.png",device = "png")
