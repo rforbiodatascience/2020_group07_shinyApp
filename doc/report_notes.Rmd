@@ -3,7 +3,7 @@ title:
 subtitle: <center> R for Data Science </center>
 authors: Catrine Høm, Paula Rodríguez, Rebeka Bató, Vlad Grigorjev.
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-bibliography: #bibliography.bib
+
 output:
   bookdown::html_document2:
     code_folding: hide
@@ -228,7 +228,8 @@ The PAM50 classifier is widely used for breast tumor intrinsic subtyping based o
 ### Cleaning
 
 ### Joining
-
+#### String formatting: ID syntax
+We can combine datasets if the rows share a unique id/reference number; both datasets share a unique id value (Complete TCGA ID). We will use the Complete TCGA ID variable to combine these datasets together. However, the Complete TCGA ID does not entirely match up in the datasets, where AO-A12D.01TCGA = TCGA-AO-A12D. To combine the clinical and proteomes datasets we use the package stringr to manipulate the Complete TCGA ID so that they follow a similar syntax in both datasets
 ### Augmenting
 
 ### Exploratory analysis
