@@ -14,6 +14,7 @@ if (!require('tidymodels')) install.packages('tidymodels'); library('tidymodels'
 if (!require('keras')) install.packages('keras'); library('keras')
 if (!require('glmnet')) install.packages('glmnet'); library('glmnet')
 if (!require('tensorflow')) install.packages('tensorflow'); library('tensorflow')
+if (!require('ranger')) install.packages('ranger'); library('ranger')
 
 # Define functions
 # ------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ df <- read_csv(file = "data/02_joined_data_aug.csv")
 set.seed(234589)
 # split the data into trainng (75%) and testing (25%)
 df_split <- initial_split(df, 
-                         prop = 1/5)
+                          prop = 1/5)
 
 
 # extract training and testing sets
@@ -49,10 +50,10 @@ df_cv <- vfold_cv(train_idx)
 
 # define the recipe
 logReg_recipy <- df %>%
- select(Tumor, starts_with("NP_")) %>%
- recipe(Tumor ~ ., data =  df) %>%
- step_normalize(all_numeric()) %>%
- step_knnimpute(all_predictors())
+        select(Tumor, starts_with("NP_")) %>%
+        recipe(Tumor ~ ., data =  df) %>%
+        step_normalize(all_numeric()) %>%
+        step_knnimpute(all_predictors())
 
 
 
@@ -67,15 +68,24 @@ logReg_recipy <- df %>%
 # I want to try a logistic regression based on "Tumor" class & expression data
 # with  "L2" penalty regularization using "keras" library ?!
 logReg_model <- 
- # specify that the model is a random forest
- logistic_reg() %>%
- # specify that the `mtry` parameter needs to be tuned
- set_args(penalty="L2") %>% # additionally a tune() could be tried for for tuning regularization weights of 'parameters" parameter
- # select the engine/package that underlies the model
- set_engine("glmnet") %>%
- # choose either the continuous regression or binary classification mode
- set_mode("classification")
+        # specify that the model is a random forest
+        logistic_reg() %>%
+        # specify that the `mtry` parameter needs to be tuned
+        set_args(penalty="L2") %>% # additionally a tune() could be tried for for tuning regularization weights of 'parameters" parameter
+        # select the engine/package that underlies the model
+        set_engine("glmnet") %>%
+        # choose either the continuous regression or binary classification mode
+        set_mode("classification")
 
+rf_model <- 
+        # specify that the model is a random forest
+        rand_forest() %>%
+        # specify that the `mtry` parameter needs to be tuned
+        set_args(mtry = 4) %>%
+        # select the engine/package that underlies the model
+        set_engine("ranger") %>%
+        # choose either the continuous regression or binary classification mode
+        set_mode("classification")
 
 # Put it all together in a workflow
 # We’re now ready to put the model and recipes together into a workflow. 
@@ -84,10 +94,19 @@ logReg_model <-
 
 # set the workflow
 logReg_workflow <- workflow() %>%
- # add the recipe
- add_recipe(logReg_recipy) %>%
- # add the model
- add_model(logReg_model)
+        # add the recipe
+        add_recipe(logReg_recipy) %>%
+        # add the model
+        add_model(logReg_model)
+
+#####################
+# TESTF ROM EXAMPLE #
+# set the workflow
+rf_workflow <- workflow() %>%
+        # add the recipe
+        add_recipe(logReg_recipy) %>%
+        # add the model
+        add_model(rf_model)
 
 # An additional step can be performed if we are using the tuning workflow for our parameters
 # which chould be included here
@@ -120,9 +139,19 @@ logReg_workflow <- workflow() %>%
 # specified by the workflow using the training data, 
 # and produce evaluations based on the test set.
 
+####################
+# TEST FROM EXAMPLE
+rf_fit <- rf_workflow %>%
+        # fit on entire training set and evaluate on test set
+        last_fit(df_split)
+
+
 logReg_fit <- logReg_workflow %>%
- # fit on entire training set and evaluate on test set
- last_fit(df_split)
+        # fit on entire training set and evaluate on test set
+        last_fit(df_split)
+
+
+
 
 # Wrangle data
 # ------------------------------------------------------------------------------
