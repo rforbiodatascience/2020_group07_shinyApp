@@ -121,7 +121,9 @@ proteome_raw_data %>%
 ```
 
 ## Data Overview 3/3
-### Expression Data
+### PAM50 panel
+
+
 ```{r}
 print("Dimentions:")
 dim(pam50_raw_data)
@@ -235,8 +237,9 @@ knitr::include_graphics("../results/05_ANN_performance.png")
 ## Other modelling
 
 - in progress:
-    - Classification tree
-    - Linear model
+    - Classification tree (supervised)
+    - Clustering (knn)
+    - Linear model ( <dev class= "red"> Only AGE as a continuous variable </dev>)
     - Logistic regression (multiclass)
 
 
@@ -246,6 +249,13 @@ Currently working as an <dev class="red2">**Interactive Heatmap**</dev>
 
 ```{r,out.width = "800px"}
 knitr::include_graphics("../doc/Rmd_sup/shinyscreenshot.png")
+```
+
+## Current "file" state
+
+
+```{r, out.width="700px"}
+knitr::include_graphics("../doc/Rmd_sup/currentfiles.PNG")
 ```
 
 
