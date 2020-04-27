@@ -8,7 +8,7 @@ library("tidyverse")
 
 # Load data
 # ------------------------------------------------------------------------------
-clinical_data_clean <- read_csv(file = "data/01_clincal_data_clean.csv")
+clinical_data_clean <- read_csv(file = "data/01_clinical_data_clean.csv")
 PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 proteome_data_clean <- read_csv(file = "data/01_proteome_data_clean.csv")
 
@@ -30,6 +30,6 @@ joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% replace_na("Control
 
 # Write data
 # ------------------------------------------------------------------------------
-write_csv(x = joined_data_wide_aug,
+write_csv(x = joined_data_aug,
           path = "data/02_joined_data_aug.csv")
 

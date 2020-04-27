@@ -58,7 +58,7 @@ names(clinical_data_clean) <- gsub("-", "_", names(clinical_data_clean)) # Remov
 # Write data
 # ------------------------------------------------------------------------------
 write_csv(x = clinical_data_clean,
-          path = "data/01_clincal_data_clean.csv")
+          path = "data/01_clinical_data_clean.csv")
 
 write_csv(x = PAM50_clean,
           path = "data/01_PAM50_clean.csv")
