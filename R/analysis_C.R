@@ -30,13 +30,11 @@ joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 # ------------------------------------------------------------------------------
 ggplot(data = clincal_data_aug) +
   geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis), binwidth = 5)
-
-ggplot(data = clincal_data_aug, mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, y = Days_to_Date_of_Last_Contact)) + 
-  geom_point()
-
+ggsave(filename = "results/03_age_distribution.png",device = "png")
 
 ggplot(data = proteome_data_aug, mapping = aes(x = NP_057427, y = NP_002408)) + 
   geom_point()
+ggsave(filename = "results/03_random_gene_correlation.png",device = "png")
 
 # View class distribution
 joined_data_aug %>% count(PAM50_mRNA) %>% print
@@ -53,13 +51,14 @@ proteome_pca %>%
   ggplot(aes(x = PC, y = percent)) +
   geom_col() +
   theme_bw()
+ggsave(filename = "results/04_scree.png",device = "png")
 
 proteome_pca_aug <- proteome_pca %>%
   augment(proteome_data_aug) %>%
   mutate(PAM50_mRNA = joined_data_aug$PAM50_mRNA)
 
 proteome_pca_aug %>% 
-  ggplot(aes(x = .fittedPC3, y = .fittedPC, label = patient_ID, color = PAM50_mRNA)) +
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, label = patient_ID, color = PAM50_mRNA)) +
   geom_text() +
   theme(legend.position = "bottom")
-ggsave(filename = "results/PCA_plot.png",device = "png")
+ggsave(filename = "results/04_PCA.png",device = "png")

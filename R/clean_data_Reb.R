@@ -63,9 +63,6 @@ replicates_free <- proteome_long %>%
   unite(expression, protein_expression, average, na.rm = TRUE, remove = TRUE) %>% 
   mutate(expression = as.double(expression)) # convert expression values back to doubles, to have the NAs recognizable
 
-proteome_reduced <- replicates_free %>% 
-  select(-gene_symbol)
-
 healthy_data <- proteome_reduced  %>% 
   filter(grepl("^.+(-)$", sampleID)) # after renaming the original ID col, healthy patients ended up like this: c4155b-
 
