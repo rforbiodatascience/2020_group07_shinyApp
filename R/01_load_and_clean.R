@@ -64,5 +64,5 @@ write_csv(x = PAM50_clean,
           path = "data/01_PAM50_clean.csv")
 
 write_csv(x = proteome_data_clean,
-          path = "data/01_proteome_data_wide_clean.csv")
+          path = "data/01_proteome_data_clean.csv")
 
