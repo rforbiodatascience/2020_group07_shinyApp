@@ -26,20 +26,8 @@ joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 # ------------------------------------------------------------------------------
 #my_data_clean_aug %>% ...
 
-# Visualise data
-# ------------------------------------------------------------------------------
-ggplot(data = clincal_data_aug) +
-  geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis), binwidth = 5)
-ggsave(filename = "results/03_age_distribution.png",device = "png")
 
-ggplot(data = proteome_data_aug, mapping = aes(x = NP_057427, y = NP_002408)) + 
-  geom_point()
-ggsave(filename = "results/03_random_gene_correlation.png",device = "png")
-
-# View class distribution
-joined_data_aug %>% count(PAM50_mRNA) %>% print
-joined_data_aug %>% count(Tumor) %>% print
-
+### For Paulas script?
 # PCA ---------------------------------------------------------------------------
 
 proteome_pca <- proteome_data_aug %>%
