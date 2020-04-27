@@ -26,7 +26,7 @@ rm(list = ls())
 # ------------------------------------------------------------------------------
 library("tidyverse")
 library("pheatmap")
-library(ggplot2)
+library("ggplot2")
 # Define functions (DELETE IF NOT USED)
 # ------------------------------------------------------------------------------
 # Load data
@@ -242,8 +242,11 @@ knitr::include_graphics("../results/05_ANN_performance.png")
 
 ## Shiny application
 
-Attempt to create an interactive plot as a web application
+Currently working as an <dev class="red2">**Interactive Heatmap**</dev>
 
+```{r,out.width = "800px"}
+knitr::include_graphics("../doc/Rmd_sup/shinyscreenshot.png")
+```
 
 
 ## Are we on track ?
