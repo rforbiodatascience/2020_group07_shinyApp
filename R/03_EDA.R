@@ -30,3 +30,25 @@ ggsave(filename = "results/03_random_gene_correlation.png",device = "png")
 # View class distribution
 joined_data_aug %>% count(PAM50_mRNA) %>% print
 joined_data_aug %>% count(Tumor) %>% print
+
+# Preliminary fast hand plots
+# ------------------------------------------------------------------------------
+clincal_data_aug %>% 
+  ggplot(mapping = aes(Gender, fill = Tumor)) +
+  geom_bar()
+ggsave("results/gender_vs_tumortype.png", device = "png")    
+
+clincal_data_aug %>% 
+  ggplot(mapping = aes(y = Tumor, x =Metastasis_Coded, colour = Tumor)) +
+  geom_jitter(width = 0.1)
+ggsave("results/metastatis_vs_tumortype.png", device = "png")
+
+clincal_data_aug %>% 
+  ggplot(mapping = aes(y = Tumor, x =methylation_Clusters, colour = Tumor)) +
+  geom_jitter(width = 0.1)
+ggsave("results/methylCluster_vs_tumorType.png", device = "png")
+
+clincal_data_aug %>% 
+  ggplot(mapping = aes(y = Tumor, x =Age_at_Initial_Pathologic_Diagnosis, colour = PAM50_mRNA)) +
+  geom_jitter(width = 0.1)
+ggsave("results/age_vs_cellTyp.png", device = "png")
