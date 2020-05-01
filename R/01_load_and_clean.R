@@ -51,6 +51,7 @@ clinical_data_clean <- clinical_data %>%
   semi_join(., proteome_data_clean, by = "patient_ID") %>% # Remove clinical data with no protein information
   select(patient_ID, everything()) # ID column first
 
+# Change non-syntactic column names
 names(clinical_data_clean) <- gsub(" ", "_", names(clinical_data_clean)) # Remove whitespaces in column names
 names(clinical_data_clean) <- gsub("-", "_", names(clinical_data_clean)) # Remove dash in column names
 
