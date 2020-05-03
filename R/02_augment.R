@@ -25,8 +25,11 @@ joined_data_aug <- proteome_data_aug %>%
   right_join(clinical_data_clean,. , by="patient_ID") 
 
 ### Add PAM50_mRNA class for control samples
-joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% replace_na("Control") 
+joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% 
+  replace_na("Control") 
 
+#### CATRINE: Leon told us NOT to use the $ to get into the columns
+#### But I don't know how to do the above otherwise.
 
 # Write data
 # ------------------------------------------------------------------------------
