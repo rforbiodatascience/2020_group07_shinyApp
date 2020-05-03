@@ -23,17 +23,31 @@ get_legend<-function(myggplot){
 # Data split for each cancer group: without CONTROL samples
 return_top_genes <- function(data, filter_by, new_label, n = 10){
   data <- data %>% 
+    select(patient_ID, PAM50_mRNA, starts_with("NP_")) %>%
     filter(PAM50_mRNA == filter_by) %>%
     pivot_longer(data = ., cols = -c(PAM50_mRNA, patient_ID)) %>% 
     pivot_wider(data = ., values_from = value, names_from = patient_ID) %>%
-    mutate(mean = rowMeans(select(.,-PAM50_mRNA,-name), na.rm = TRUE)) %>%
-    mutate(mean = abs(mean)) %>%
-    arrange(desc(mean)) %>%
-    rename(new_label = name) %>%
-    select(new_label) %>%
+    mutate(avg = rowMeans(select(.,-PAM50_mRNA,-name), na.rm = TRUE)) %>%
+    mutate(avg = abs(avg)) %>%
+    arrange(desc(avg)) %>%
+    select(name) %>%
+    rename(., new_label = name) %>%
     slice(.,1:n)
   return(data)
 }
+
+# df_big %>% 
+#   select(patient_ID, PAM50_mRNA, starts_with("NP_")) %>%
+#   filter(PAM50_mRNA == "Luminal B") %>%
+#   pivot_longer(data = ., cols = -c(PAM50_mRNA, patient_ID)) %>% 
+#   pivot_wider(data = ., values_from = value, names_from = patient_ID) %>%
+#   mutate(avg = rowMeans(select(.,-PAM50_mRNA,-name), na.rm = TRUE)) %>%
+#   mutate(avg = abs(avg)) %>%
+#   arrange(desc(avg)) %>%
+#   select(name) %>%
+#   rename(new_label = name) %>%
+#   slice(.,1:n)
+# return(data)
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
