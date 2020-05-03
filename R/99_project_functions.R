@@ -61,7 +61,64 @@ docstring(return_top_genes)
 
 
 # ------------------------------------------------------------------------------
+# Function: Use the data splits based on PAM50 subtype to generate plots iteratively
+plotting_PAM50_density <- function (data) {
+  subset <- data %>% select(PAM50_mRNA) %>% unique(.)
+  title <- paste0(subset," tissue: Density")
+  file_prefex <- "results/03_EDA_tissue_"
+  file_suffix <- "_density.png"
+  data %>%   select(patient_ID,
+                    starts_with("NP_"),
+                    PAM50_mRNA
+  ) %>%
+    pivot_longer(cols = starts_with('NP_')) %>%
+    ggplot(aes( x=value, 
+                fill=patient_ID
+    )) + 
+    geom_density(alpha=0.5) + 
+    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+    ggtitle(title) +
+    theme_bw(base_family = "Times", 
+             base_size = 10) +
+    theme(legend.position = "none") +
+    labs(x = "Log2 Expression",
+         y = "Density")
+  ggsave( filename = paste0(file_prefex, subset,file_suffix),
+          device = "png")
+}
 # ------------------------------------------------------------------------------
+# ggplot function for handling a single instance
+plotting_boxplot <- function(data, subset_term, color) {
+  data %>%   
+    select(patient_ID,
+           starts_with("NP_"),
+           PAM50_mRNA
+    ) %>%
+    subset(PAM50_mRNA == subset_term) %>%
+    pivot_longer(cols = starts_with('NP_')) %>%
+    ggplot(aes( y = patient_ID, 
+                x = value,
+    )
+    ) + 
+    geom_boxplot(alpha=0.5,
+                 varwidth = TRUE,
+                 outlier.shape = NA,
+                 fill = color,
+    ) + 
+    labs(x = "Log2 Expression levels",
+         y = "Patients",
+         title = subset_term) +
+    xlim(-10,10) +
+    geom_vline(xintercept = c(-1.5, 0.5), linetype="dashed") + # based on Control sample profiles
+    theme_bw(base_family = "Times", 
+             base_size = 10) +
+    theme(legend.position = "none", 
+          axis.text.y = element_blank(),
+          plot.title = element_text(hjust = 0.5,
+                                    size = 20,)
+    )
+}
+
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
