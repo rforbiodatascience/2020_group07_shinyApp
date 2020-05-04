@@ -229,7 +229,7 @@ knitr::include_graphics(c("../results/04_PCA.png","../results/04_scree.png"))
 
 ## ANN model confusion matrix
 
-```{r,out.width = "600px", fig.align="center"}
+```{r,out.width = "700px", fig.align="center"}
 knitr::include_graphics("../results/05_ANN_performance.png")
 ```
 
@@ -253,7 +253,7 @@ Figure: PCA plots annotated using the different
 
 Currently working as an <dev class="red2">**Interactive Heatmap**</dev>
 
-```{r,out.width = "700px"}
+```{r,out.width = "750px"}
 knitr::include_graphics("../doc/Rmd_sup/shinyscreenshot.png")
 ```
 
@@ -262,6 +262,12 @@ knitr::include_graphics("../doc/Rmd_sup/shinyscreenshot.png")
 
 ```{r, out.width="700px"}
 knitr::include_graphics("../doc/Rmd_sup/currentfiles.PNG")
+```
+
+## Current script organization
+
+```{r}
+knitr::include_graphics("../doc/Rmd_sup/Capture.PNG")
 ```
 
 
