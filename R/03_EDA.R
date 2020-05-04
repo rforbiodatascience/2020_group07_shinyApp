@@ -19,12 +19,19 @@ clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
 PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
+# Rewrite a label of HER2-enriched category
+
+joined_data_aug <- joined_data_aug %>% 
+                    mutate(PAM50_mRNA = str_replace(PAM50_mRNA,
+                                                    pattern = "HER2-enriched",
+                                                    replacement = "HER2"))
+# ------------------------------------------------------------------------------
 # Combining x4 Exploratory analysis plots into a single canvas
 # ------------------------------------------------------------------------------
 # Plot 1/4
 p11 <- clincal_data_aug %>% 
   ggplot(mapping = aes(Gender, 
-                       fill = Tumor
+                       fill = PAM50_mRNA
                        )
          ) +
   geom_bar() +
@@ -32,7 +39,7 @@ p11 <- clincal_data_aug %>%
            base_size = 12
            ) +
   labs(y = "Count",
-       title = "Tumor subtype: occurance based on gender"
+       title = "PAM50 tumor subtype: occurance based on gender"
        ) +
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 14
@@ -44,9 +51,9 @@ p11 <- p11 + theme(legend.position = "none")
 
 # Plot 2/4
 p22 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(y = Tumor, 
+  ggplot(mapping = aes(y = PAM50_mRNA, 
                        x = Metastasis_Coded,
-                       colour = Tumor
+                       colour = PAM50_mRNA
                        )
          ) +
   geom_jitter(width = 0.15, 
@@ -56,7 +63,7 @@ p22 <- clincal_data_aug %>%
            base_size = 12
            ) +
   labs(x = "Metastasis",
-       y = "Tumor Type",
+       y = "PAM50 tumor subtype",
        title = "Metastasis of different tumor subtypes"
        ) +
   theme(plot.title = element_text(hjust = 0.5, 
@@ -70,9 +77,9 @@ p22 <- p22 + theme(legend.position = "none")
 
 # Plot 3/4
 p33 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(y = Tumor, 
+  ggplot(mapping = aes(y = PAM50_mRNA, 
                        x = methylation_Clusters,
-                       colour = Tumor
+                       colour = PAM50_mRNA
                        )
          ) +
   geom_jitter(width = 0.1, 
@@ -81,7 +88,7 @@ p33 <- clincal_data_aug %>%
   theme_bw(base_family = "Times", 
            base_size = 12
            ) +
-  labs(y = "Tumor Type",
+  labs(y = "PAM50 tumor subtype",
        x = "Methylation cluster",
        title = "Methylation clusters of different tumor subtypes"
        ) +
@@ -96,37 +103,30 @@ p33 <- p33 + theme(legend.position = "none")
 
 # Plot 4/4
 p44 <- clincal_data_aug %>% 
-        ggplot(mapping = aes(y = Tumor, 
-                             x =Age_at_Initial_Pathologic_Diagnosis,
-                             colour = Tumor
-        )
-        ) +
+        ggplot(mapping = aes(y = PAM50_mRNA, 
+                             x = Age_at_Initial_Pathologic_Diagnosis,
+                             colour = PAM50_mRNA)) +
         geom_violin(scale = "area", 
                     trim = TRUE,
-                    mapping = aes(fill=Tumor)
-        ) +
+                    mapping = aes(fill=Tumor)) +
         #geom_dotplot(binaxis='x', dotsize=1) +
         stat_summary(fun=median, geom="point", 
                      size=2, color="black") +
         theme_bw(base_family = "Times", 
-                 base_size = 12
-        ) +
-        labs(y = "Tumor Type",
+                 base_size = 12) +
+        labs(y = "PAM50 tumor subtype",
              x = " Age at initial diagnosis",
              title = "Tumor subtype based on person's age"
         ) +
         theme(plot.title = element_text(hjust = 0.5, 
-                                        size = 14
-        )
-        )
+                                        size = 14))
+
 # Save then adjust the legend,  save it as a variable and remove from the plot itself
 ggsave(plot = p44, "results/age_vs_tumorType.png", device = "png")
 legend_temp <- p44 + theme(legend.text = element_text(size = 20),
             legend.title = element_text(size = 20),
             legend.key.size = unit(20,"point"),
-            legend.position = "bottom",
-            #legend.box.background = element_rect(colour = "black")
-            ) 
+            legend.position = "bottom") 
 
 # Call the helper function for legend extraction
 shared_legend <- get_legend(legend_temp)
@@ -140,7 +140,9 @@ plot_EDA1 <- grid.arrange(p11, p22, p33, p44, shared_legend,
              widths = c(2.7, 2.7),
              nrow = 3,
              heights = c(2.7, 2.7, 0.5),
-             layout_matrix = rbind(c(1,2), c(3,4), c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
+             layout_matrix = rbind(c(1,2), 
+                                   c(3,4), 
+                                   c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
              )
               
 # Save the combined plot
@@ -190,67 +192,67 @@ dev.off()
 
 # Distribution of expression for all samples
 # ------------------------------------------------------------------------------
-joined_data_aug %>%   select(patient_ID,
-                             starts_with("NP_"), 
-                             PAM50_mRNA
-                             ) %>%
-                      pivot_longer(cols = starts_with('NP_')) %>%
-                        ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
-                        geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-                        ggtitle("Density") +
-                        theme_bw(base_family = "Times", base_size = 10) +
-                        theme(legend.position = "none")
-ggsave(filename = "results/density_sample_expression.png",device = "png")
+# joined_data_aug %>%   select(patient_ID,
+#                              starts_with("NP_"), 
+#                              PAM50_mRNA
+#                              ) %>%
+#                       pivot_longer(cols = starts_with('NP_')) %>%
+#                         ggplot(aes(x=value, fill=patient_ID)) + geom_density(alpha=0.5) + 
+#                         geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#                         ggtitle("Density") +
+#                         theme_bw(base_family = "Times", base_size = 10) +
+#                         theme(legend.position = "none")
+# ggsave(filename = "results/density_sample_expression.png",device = "png")
 
 
 
 # Try subsetting by iteration using the "tidy" way
-df_PAM50_split <- joined_data_aug %>%
-                    group_split(PAM50_mRNA)
+# df_PAM50_split <- joined_data_aug %>%
+                  # group_split(PAM50_mRNA)
 
-# Function: Use the data splits based on PAM50 subtype to generate plots iteratively
-plotting_PAM50_density <- function (data) {
-                        subset <- data %>% select(PAM50_mRNA) %>% unique(.)
-                        title <- paste0(subset," tissue: Density")
-                        file_prefex <- "results/03_EDA_tissue_"
-                        file_suffix <- "_density.png"
-                        data %>%   select(patient_ID,
-                                          starts_with("NP_"),
-                                          PAM50_mRNA
-                                          ) %>%
-                                   pivot_longer(cols = starts_with('NP_')) %>%
-                                   ggplot(aes( x=value, 
-                                               fill=patient_ID
-                                            )) + 
-                                   geom_density(alpha=0.5) + 
-                                   geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-                                   ggtitle(title) +
-                                   theme_bw(base_family = "Times", 
-                                            base_size = 10) +
-                                   theme(legend.position = "none") +
-                                   labs(x = "Log2 Expression",
-                                        y = "Density")
-                        ggsave( filename = paste0(file_prefex, subset,file_suffix),
-                                device = "png")
-}
+# # Function: Use the data splits based on PAM50 subtype to generate plots iteratively
+# plotting_PAM50_density <- function (data) {
+#                         subset <- data %>% select(PAM50_mRNA) %>% unique(.)
+#                         title <- paste0(subset," tissue: Density")
+#                         file_prefex <- "results/03_EDA_tissue_"
+#                         file_suffix <- "_density.png"
+#                         data %>%   select(patient_ID,
+#                                           starts_with("NP_"),
+#                                           PAM50_mRNA
+#                                           ) %>%
+#                                    pivot_longer(cols = starts_with('NP_')) %>%
+#                                    ggplot(aes( x=value, 
+#                                                fill=patient_ID
+#                                             )) + 
+#                                    geom_density(alpha=0.5) + 
+#                                    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#                                    ggtitle(title) +
+#                                    theme_bw(base_family = "Times", 
+#                                             base_size = 10) +
+#                                    theme(legend.position = "none") +
+#                                    labs(x = "Log2 Expression",
+#                                         y = "Density")
+#                         ggsave( filename = paste0(file_prefex, subset,file_suffix),
+#                                 device = "png")
+# }
 
 # Mappings between the subsets and the plot
-plots_density <- map(df_PAM50_split, ~plotting_PAM50_density(.x))
+# plots_density <- map(df_PAM50_split, ~plotting_PAM50_density(.x))
 
 
 # Combined densities per Tissue group
-joined_data_aug %>%   select(patient_ID,
-                            starts_with("NP_"),
-                            PAM50_mRNA
-                            ) %>%
-                            pivot_longer(cols = starts_with('NP_')) %>%
-                            ggplot(aes(x=value, fill=PAM50_mRNA)) + 
-                            geom_density(alpha=0.5,) + 
-                            geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-                            ggtitle("") +
-                            theme_bw(base_family = "Times", base_size = 10)
-
-ggsave(filename = "results/03_EDA_density_tissue_perGroup.png", device = "png")
+# joined_data_aug %>%   select(patient_ID,
+#                             starts_with("NP_"),
+#                             PAM50_mRNA
+#                             ) %>%
+#                             pivot_longer(cols = starts_with('NP_')) %>%
+#                             ggplot(aes(x=value, fill=PAM50_mRNA)) + 
+#                             geom_density(alpha=0.5,) + 
+#                             geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
+#                             ggtitle("") +
+#                             theme_bw(base_family = "Times", base_size = 10)
+# 
+# ggsave(filename = "results/03_EDA_density_tissue_perGroup.png", device = "png")
 
 
 # BOXPLOTS: combining 4x plots into one canvas
@@ -262,47 +264,42 @@ df_PAM50_split <- joined_data_aug %>%
                   filter(PAM50_mRNA != "Control") %>%
                   group_split(PAM50_mRNA)
 
-# ggplot function for handling a single instance
-plotting_boxplot <- function(data, subset_term, color) {
-                    data %>%   
-                    select(patient_ID,
-                           starts_with("NP_"),
-                           PAM50_mRNA
-                           ) %>%
-                    subset(PAM50_mRNA == subset_term) %>%
-                    pivot_longer(cols = starts_with('NP_')) %>%
-                    ggplot(aes( y = patient_ID, 
-                                x = value,
-                              )
-                           ) + 
-                    geom_boxplot(alpha=0.5,
-                                 varwidth = TRUE,
-                                 outlier.shape = NA,
-                                 fill = color,
-                                 ) + 
-                    labs(x = "Log2 Expression levels",
-                         y = "Patients",
-                         title = subset_term) +
-                    xlim(-10,10) +
-                    geom_vline(xintercept = c(-1.5, 0.5), linetype="dashed", co) + # based on Control sample profiles
-                    theme_bw(base_family = "Times", 
-                             base_size = 10) +
-                    theme(legend.position = "none", 
-                          axis.text.y = element_blank(),
-                          plot.title = element_text(hjust = 0.5,
-                                                    size = 20,)
-                          )
-}
+
 
 
 # Mappings between the subsets and the plotting function:
 # Creating a separate plot while gettign colored individually, to be combined later
+source(file = "R/99_project_functions.R")
 p1_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Basal-like", color = "red")
-p2_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "HER2-enriched", color = "green")
+p2_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "HER2", color = "green")
 p3_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Luminal A", color = "turquoise3")
 p4_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Luminal B", color = "purple")
 
-plot_EDA2_boxplot_combo <- grid.arrange(p1_boxplot, p3_boxplot, p2_boxplot, p4_boxplot, ncol =2)
+
+# Call the helper function for legend extraction
+shared_legend <- get_legend(p4_boxplot)
+
+# Remove the legend from the remaing plot
+p1_boxplot <- p1_boxplot + theme(legend.position = "none")
+p2_boxplot <- p2_boxplot + theme(legend.position = "none")
+p3_boxplot <- p3_boxplot + theme(legend.position = "none")
+p4_boxplot <- p4_boxplot + theme(legend.position = "none")
+
+# Combine the 4 plots and the shared legend
+plot_EDA2_boxplot_combo <- grid.arrange(p1_boxplot,
+                                        p2_boxplot, 
+                                        p3_boxplot, 
+                                        p4_boxplot,
+                                        shared_legend,
+                                        ncol= 2,
+                                        widths = c(2.7, 2.7),
+                                        nrow = 3,
+                                        heights = c(2.7, 2.7, 0.5),
+                                        layout_matrix = rbind(c(1,2), 
+                                                              c(3,4), 
+                                                              c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
+                                        )
+
 
 ggsave(plot = plot_EDA2_boxplot_combo, filename = "results/03_EDA_boxplot_combined.png",
        device = "png",

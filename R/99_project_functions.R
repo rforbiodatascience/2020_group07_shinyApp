@@ -88,39 +88,102 @@ plotting_PAM50_density <- function (data) {
 }
 # ------------------------------------------------------------------------------
 # ggplot function for handling a single instance
-plotting_boxplot <- function(data, subset_term, color) {
+plotting_boxplot2 <- function(data, subset_term, color) {
   data %>%   
     select(patient_ID,
            starts_with("NP_"),
-           PAM50_mRNA
-    ) %>%
+           PAM50_mRNA) %>%
     subset(PAM50_mRNA == subset_term) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes( y = patient_ID, 
-                x = value,
-    )
+    ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
+               x = value)
+          ) + 
+    geom_boxplot(alpha=0.5,
+                 varwidth = TRUE,
+                 outlier.shape = NA,
+                 fill = color
+                 ) + 
+    labs(x = "Log2 Expression levels",
+         y = "Patients",
+         title = subset_term
+         ) +
+    xlim(-10,10) +
+    geom_vline(xintercept = c(-1.5, 0.5), 
+               linetype="dashed")  # based on Control sample profiles
+    theme_bw(base_family = "Times", 
+             base_size = 14) +
+    theme(legend.position = "none", 
+          axis.text.y = element_blank(),
+          plot.title = element_text(hjust = 0.5,
+                                    size = 20
+                                    )
+          )
+}
+
+# ------------------------------------------------------------------------------
+# ggplot function for handling a single instance
+# This one would add the reference line legend
+plotting_boxplot <- function(data, subset_term, color) {
+  plot <- data %>%   
+    select(patient_ID,
+           starts_with("NP_"),
+           PAM50_mRNA) %>%
+    subset(PAM50_mRNA == subset_term) %>%
+    pivot_longer(cols = starts_with('NP_')) %>%
+    ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
+               x = value)
     ) + 
     geom_boxplot(alpha=0.5,
                  varwidth = TRUE,
                  outlier.shape = NA,
-                 fill = color,
+                 fill = color
     ) + 
     labs(x = "Log2 Expression levels",
          y = "Patients",
-         title = subset_term) +
+         title = subset_term
+    ) +
     xlim(-10,10) +
-    geom_vline(xintercept = c(-1.5, 0.5), linetype="dashed") + # based on Control sample profiles
+    geom_vline(aes(xintercept=c(0.5),
+                   color="Range"), 
+               linetype="solid",
+               size=1) +
+    geom_vline(aes(xintercept=c(-1.5),
+                   #color="Lower Bound"
+                   ), 
+               linetype="solid",
+               size=1) +
+    scale_color_manual(name = "Control samples:", 
+                       values = c('Range' = "black", 
+                                  'Lower Bound' = "grey12")
+                                  ) +
+    stat_summary(fun = "median", 
+                 geom = "point", 
+                 colour = "white", 
+                 shape = 23, 
+                 size = 1,) +
     theme_bw(base_family = "Times", 
-             base_size = 10) +
-    theme(legend.position = "none", 
+           base_size = 20,) +
+    theme(legend.position = "bottom",
           axis.text.y = element_blank(),
           plot.title = element_text(hjust = 0.5,
-                                    size = 20,)
+                                    size = 20
+          )
     )
+  return(plot)
 }
 
 # ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
+
+
+
+# # Diverging Barcharts
+# joined_data_aug %>%
+#   select(patient_ID,
+#          starts_with("NP_"),
+#          PAM50_mRNA) %>%
+#   subset(PAM50_mRNA == subset_term) %>%
+#   pivot_longer(cols = starts_with('NP_')) %>%
+
+
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
