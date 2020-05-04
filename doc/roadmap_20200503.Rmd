@@ -110,50 +110,50 @@ As rate of oncological diseases in the world keeps rising, there is an increased
     - treatment effects treatment on tumor landscapes
 
 
-## Data Overview 1/3
-### Clinical Data
-```{r, warning=FALSE, message=FALSE}
-#print("Dimentions:")
-dim(clinical_raw_data)
-#print("Attributes")
-#colnames(clinical_raw_data)[1:10]
+<!-- ## Data Overview 1/3 -->
+<!-- ### Clinical Data -->
+<!-- ```{r, warning=FALSE, message=FALSE} -->
+<!-- #print("Dimentions:") -->
+<!-- dim(clinical_raw_data) -->
+<!-- #print("Attributes") -->
+<!-- #colnames(clinical_raw_data)[1:10] -->
 
-clinical_raw_data %>%
-  keep(is.numeric) %>% 
-  gather() %>% 
-  ggplot(aes(value)) +
-    facet_wrap(~ key, scales = "free") +
-    geom_histogram()
-```
+<!-- clinical_raw_data %>% -->
+<!--   keep(is.numeric) %>%  -->
+<!--   gather() %>%  -->
+<!--   ggplot(aes(value)) + -->
+<!--     facet_wrap(~ key, scales = "free") + -->
+<!--     geom_histogram() -->
+<!-- ``` -->
 
-## Data Overview 2/3
-### Expression Data
-```{r, warning=FALSE, message=FALSE}
-#print("Dimentions:")
-dim(proteome_raw_data)
-#print("Attributes")
-#colnames(clinical_raw_data)[1:10]
+<!-- ## Data Overview 2/3 -->
+<!-- ### Expression Data -->
+<!-- ```{r, warning=FALSE, message=FALSE} -->
+<!-- #print("Dimentions:") -->
+<!-- dim(proteome_raw_data) -->
+<!-- #print("Attributes") -->
+<!-- #colnames(clinical_raw_data)[1:10] -->
 
-proteome_raw_data %>%
-  select(-c(RefSeq_accession_number, gene_symbol, gene_name)) %>%
-  select(starts_with("B")) %>% 
-  keep(is.numeric) %>% 
-  gather() %>% 
-  ggplot(aes(value)) +
-    labs(x = "Log2 Expression") +
-    facet_wrap(~ key, scales = "free") +
-    geom_histogram()
-```
+<!-- proteome_raw_data %>% -->
+<!--   select(-c(RefSeq_accession_number, gene_symbol, gene_name)) %>% -->
+<!--   select(starts_with("B")) %>%  -->
+<!--   keep(is.numeric) %>%  -->
+<!--   gather() %>%  -->
+<!--   ggplot(aes(value)) + -->
+<!--     labs(x = "Log2 Expression") + -->
+<!--     facet_wrap(~ key, scales = "free") + -->
+<!--     geom_histogram() -->
+<!-- ``` -->
 
-## Data Overview 3/3
-### PAM50 panel
+<!-- ## Data Overview 3/3 -->
+<!-- ### PAM50 panel -->
 
 
-```{r}
-print("Dimentions:")
-dim(pam50_raw_data)
-colnames(pam50_raw_data)
-```
+<!-- ```{r} -->
+<!-- print("Dimentions:") -->
+<!-- dim(pam50_raw_data) -->
+<!-- colnames(pam50_raw_data) -->
+<!-- ``` -->
 
 ## Data Preparation: Cleaning
 
@@ -175,23 +175,24 @@ colnames(pam50_raw_data)
 ## Exploratory analysis:
 Exploring Clinical Dataset patterns:
 
-```{r EDAclinical, warning=FALSE, message=FALSE, out.width="750px",fig.align = "center" }
+```{r EDAclinical, warning=FALSE, message=FALSE, out.width="700px",fig.align = "center" }
 
 # Preliminary fast hand plots
 # ------------------------------------------------------------------------------
-knitr::include_graphics(path = "../results/03_EDA_grid4_combo.png")
+knitr::include_graphics(path = "../results/03_EDA_grid4_combo2.png")
 ```
-Figure: Exploratory analysis of clinical data
+
+Figure: Exploratory analysis of clinical data: Mapping PAM50 tumor subtype category against other clinical data.
 
 ## Data Preparation: Joining 
 Combining Clinical data and Expression data based on patient IDs:
 - This allows for splitting the proteomic data based on PAM50 markers subgroups
                   
-```{r boxplots, warning=FALSE, message=FALSE, out.width="700px",fig.align = "center"}
+```{r boxplots, warning=FALSE, message=FALSE, out.width="600px",fig.align = "center"}
 knitr::include_graphics("../results/03_EDA_boxplot_combined.png")
 ```
 
-- Figure: Boxplot of individual PAM50 groups based on differential gene expression. Dashed lines indicates the maximum range of expression for control, non-tumor, samples.
+Figure: Boxplot of individual PAM50 groups based on differential gene expression. Dashed lines indicates the maximum range of expression for control, non-tumor, samples.
 
 ## Tissue specific expression landscape
 ### Heatmap
@@ -202,20 +203,22 @@ knitr::include_graphics("../results/proteom_heatmap_celltype.png")
 - Figure: Heatmap of patients' expression data of PAM50 gene set
 
 ## Gene Ontology landscape
+This was not feasible with such a large number of samples 
+that display a large amount of differences even within each groups
 
-Explore the gene clustering profiles using Gene ontology PANTHER resourse
+Shown here are the common genes from top 50 Differentially Expressed  genes within each group,
+calculated as an average value across all patients within that group. 
 
-< coming (... <dev class= "green"> EXAMPLE ... </dev>) >
+Still working on trying to see if this could be informative...
 
-```{r, out.width="350px", fig.show="hold",fig.align = "center"}
-knitr::include_graphics("../doc/Rmd_sup/df_full_top50_BioProc.png")
-knitr::include_graphics("../doc/Rmd_sup/df_full_top50_CellComponents.png")
+```{r, out.width="350px",,, out.width=c("49%","49%")}
+knitr::include_graphics(c("../doc/Rmd_sup/df_full_top50_BioProc.png","../doc/Rmd_sup/df_full_top50_CellComponents.png"))
 
 ```
 
 
 ## Modelling data: PCA
-```{r image_grobs, fig.align = "default", out.width=c("85%","40%"), }
+```{r image_grobs, fig.align = "default", out.width=c("70%","40%"), fig.align="center" }
 
 knitr::include_graphics(c("../results/04_PCA.png","../results/04_scree.png"))
 
@@ -226,33 +229,31 @@ knitr::include_graphics(c("../results/04_PCA.png","../results/04_scree.png"))
 
 ## ANN model confusion matrix
 
-```{r,out.width = "800px"}
+```{r,out.width = "600px", fig.align="center"}
 knitr::include_graphics("../results/05_ANN_performance.png")
 ```
 
-## NEW SLIDE
- ### PLEASE ADD INFO
-PCA kmeans
+## K-means clustering
 
 ```{r, out.width="800px", fig.align="center"}
 knitr::include_graphics("../results/04_PCA_kmeans.png")
 ```
+Figure: PCA plots annotated using the different 
 
+<!-- ## Other modelling -->
 
-## Other modelling
-
-- in progress:
-    - Classification tree (supervised)
-    - Clustering (knn)
-    - Linear model ( <dev class= "red"> Only AGE as a continuous variable </dev>)
-    - Logistic regression (multiclass)
+<!-- - in progress: -->
+<!--     - Classification tree (supervised) -->
+<!--     - Clustering (knn) -->
+<!--     - Linear model ( <dev class= "red"> Only AGE as a continuous variable </dev>) -->
+<!--     - Logistic regression (multiclass) -->
 
 
 ## Shiny application
 
 Currently working as an <dev class="red2">**Interactive Heatmap**</dev>
 
-```{r,out.width = "800px"}
+```{r,out.width = "700px"}
 knitr::include_graphics("../doc/Rmd_sup/shinyscreenshot.png")
 ```
 
