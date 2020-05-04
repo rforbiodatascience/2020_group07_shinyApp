@@ -16,9 +16,9 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-clincal_data_aug <- read_csv(file = "data/01_clincal_data_clean.csv")
+clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
 PAM50_aug <- read_csv(file = "data/01_PAM50_clean.csv")
-proteome_data_aug <- read_csv(file = "data/02_proteome_data_wide_aug.csv")
+proteome_data_aug <- read_csv(file = "data/01_proteome_data_clean.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # View the data
@@ -70,7 +70,7 @@ y_test = joined_data_aug %>%
 # ------------------------------------------------------------------------------
 
 # Set hyperparameters
-n_hidden_1 = 43
+n_hidden_1 = 40
 h1_activate = 'relu'
 drop_out_1 = 0.4
 n_hidden_2 = 40
@@ -91,7 +91,7 @@ learn_rate = 0.001
 
 # Set architecture
 model = keras_model_sequential() %>% 
-  layer_dense(units = n_hidden_1, activation = h1_activate, input_shape = 43) %>% 
+  layer_dense(units = n_hidden_1, activation = h1_activate, input_shape = 40) %>% 
   layer_dropout(rate = drop_out_1) %>% 
   layer_dense(units = n_hidden_2, activation = h2_activate) %>%
   layer_dropout(rate = drop_out_2) %>%

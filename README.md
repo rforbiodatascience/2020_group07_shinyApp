@@ -6,20 +6,6 @@ Trello link
 
 <https://trello.com/b/gU6imQR9/r-project>
 
-Current agenda:
---------------------
--   Clean datasets
-
-Deadline for deciding the dataset: 06.04.2020
-
-Deadline for cleaning the dataset: 13.04.2020
-
-Deadline for trying to do some EDA: 20.04.2020
-
-Tasks done:
---------------------
--   Find the interesting datasets
-
 Description
 --------------------
 
@@ -27,13 +13,10 @@ An exploratory proteome analysis of breast cancer proteomes dataset as part of t
 
 Research questions
 --------------------
-Supervised learning: Selection of feature importances
 
-Machine learning classification (e.g. k-means)
 
 Datasets
 --------------------
-
 ### Breast Cancer Proteomes: link
 
 <https://www.kaggle.com/piotrgrabo/breastcancerproteomes#clinical_data_breast_cancer.csv>

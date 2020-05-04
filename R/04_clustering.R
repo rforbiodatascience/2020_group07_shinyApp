@@ -4,9 +4,12 @@ rm(list = ls())
 
 # Load libraries
 # ------------------------------------------------------------------------------
+if (!requireNamespace("patchwork", quietly = TRUE))
+  install.packages("patchwork")
+
 library("tidyverse")
 library("broom")
-library(patchwork)
+library("patchwork")
 
 # Define functions
 # ------------------------------------------------------------------------------
