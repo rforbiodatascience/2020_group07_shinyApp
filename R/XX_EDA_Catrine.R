@@ -29,5 +29,5 @@ clinical_data_clean %>%
        x = 'AJJC stage',
        y = 'Age at initial diagnosis')
 
-
+ggsave(filename = "results/03_age_cancer_severity.png",device = "png")
 
