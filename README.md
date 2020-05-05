@@ -19,7 +19,7 @@ The data contain 3 files:
 The data is available in this git under data/\_raw. 
 
 The data was originally found on Kaggle:
-<https://www.kaggle.com/piotrgrabo/breastcancerproteome>
+<https://www.kaggle.com/piotrgrabo/breastcancerproteomes>
 
 
 Group members
