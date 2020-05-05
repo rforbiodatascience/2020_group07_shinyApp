@@ -1,6 +1,3 @@
-# Scaled down version of this blog post on the TensorFlow for R Blog at RStudio
-# https://blogs.rstudio.com/tensorflow/posts/2018-01-29-dl-for-cancer-immunotherapy/
-
 # Clear workspace
 # ------------------------------------------------------------------------------
 rm(list = ls())

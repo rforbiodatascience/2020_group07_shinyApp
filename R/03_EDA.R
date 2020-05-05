@@ -9,6 +9,7 @@ library("broom")
 if (!requireNamespace("gridExtra", quietly = TRUE))
   install.packages("gridExtra")
 library(gridExtra)
+
 # Define functions
 # ------------------------------------------------------------------------------
 source(file = "R/99_project_functions.R")
@@ -347,3 +348,4 @@ plot_TvsPAM50_boxplot <- joined_data_aug %>%
 ggsave(plot = plot_TvsPAM50_boxplot, filename = "results/03_EDA_boxplot_T_vs_PAM50_mapping.png",
        device = "png",
 )
+
