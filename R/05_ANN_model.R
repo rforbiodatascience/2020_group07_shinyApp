@@ -64,13 +64,13 @@ y_test = joined_data_aug %>%
 n_hidden_1 = 40
 h1_activate = 'relu'
 drop_out_1 = 0.4
-n_hidden_2 = 40
+n_hidden_2 = 30
 h2_activate = 'relu'
 drop_out_2 = 0.3
-n_hidden_3 = 20
+n_hidden_3 = 40
 h3_activate = 'relu'
 drop_out_3 = 0.2
-n_hidden_4 = 10
+n_hidden_4 = 30
 h4_activate = 'relu'
 drop_out_4 = 0.1
 n_output   = 4
@@ -115,7 +115,7 @@ history = model %>%
 
 # Evaluate model
 # ------------------------------------------------------------------------------
-# OBS THIS ONLY WORKS IF ALL CLASSES IS PRESENT IN y_test AND gets predicted
+# OBS THIS ONLY WORKS IF ALL CLASSES GETS PREDICTED
 # OTHERWISE, THE FACTORING GOES WRONG.
 perf_test = model %>% evaluate(X_test, y_test)
 acc_test = perf_test %>% pluck('acc') %>% round(3) * 100

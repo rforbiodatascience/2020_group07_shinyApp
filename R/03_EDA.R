@@ -29,6 +29,33 @@ joined_data_aug <- joined_data_aug %>%
                     mutate(PAM50_mRNA = str_replace(PAM50_mRNA,
                                                     pattern = "HER2-enriched",
                                                     replacement = "HER2"))
+
+# Catrines plots
+# ------------------------------------------------------------------------------
+ggplot(data = clincal_data_aug) +
+  geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis), 
+                 binwidth = 5
+                 ) +
+  labs(title = "Age at diagnosis",
+       x = 'Age',
+       y = 'Count')
+ggsave(filename = "results/03_EDA_age_distribution.png",device = "png")
+
+clincal_data_aug %>%
+  ggplot(aes(x = AJCC_Stage, 
+             y = Age_at_Initial_Pathologic_Diagnosis, 
+             colour = AJCC_Stage)) +
+  geom_violin() + 
+  geom_jitter(alpha = 0.5) +
+  stat_summary(fun=median, geom="point", 
+               size=2, color="black") +
+  theme_bw(base_family = "Times", 
+           base_size = 12) +
+  labs(title = "Age versus cancer severity",
+       x = 'AJJC stage',
+       y = 'Age at initial diagnosis')
+ggsave(filename = "results/03_EDA_age_cancer_severity.png",device = "png")
+
 # ------------------------------------------------------------------------------
 # Combining x4 Exploratory analysis plots into a single canvas
 # ------------------------------------------------------------------------------

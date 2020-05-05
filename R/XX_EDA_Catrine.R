@@ -15,6 +15,8 @@ source(file = "R/99_project_functions.R")
 clinical_data_clean <- read_csv(file = "data/01_clinical_data_clean.csv")
 
 
+
+
 clinical_data_clean %>%
   ggplot(aes(x = AJCC_Stage, 
              y = Age_at_Initial_Pathologic_Diagnosis, 
