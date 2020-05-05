@@ -7,8 +7,11 @@ rm(list = ls())
 library("tidyverse")
 library("broom")
 if (!requireNamespace("gridExtra", quietly = TRUE))
-  install.packages("gridExtra")
+  install.packages("gridExtra") 
 library(gridExtra)
+
+# Catrine: if we do the install packages (which is pretty smart),
+# We should do it in every script.
 
 # Define functions
 # ------------------------------------------------------------------------------
@@ -261,6 +264,7 @@ dev.off()
 # ------------------------------------------------------------------------------
 # Tidy approacj to orthogonal data processing:
 
+# Catrine: Where do you use this df?
 # Data split for each cancer group: without CONTROL samples
 df_PAM50_split <- joined_data_aug %>%
                   filter(PAM50_mRNA != "Control") %>%
@@ -281,7 +285,7 @@ p4_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Luminal B"
 # Call the helper function for legend extraction
 shared_legend <- get_legend(p4_boxplot)
 
-# Remove the legend from the remaing plot
+# Remove the legend from the remaining plot
 p1_boxplot <- p1_boxplot + theme(legend.position = "none")
 p2_boxplot <- p2_boxplot + theme(legend.position = "none")
 p3_boxplot <- p3_boxplot + theme(legend.position = "none")
@@ -307,6 +311,9 @@ ggsave(plot = plot_EDA2_boxplot_combo, filename = "results/03_EDA_boxplot_combin
        device = "png",
        height = 5,
 )
+
+### Catrine: the black line is the control samples... median +/- something?
+### Why is some samples outside the range?
 
 # ------------------------------------------------------------------------------
 plot_TvsPAM50_boxplot <- joined_data_aug %>%   

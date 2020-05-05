@@ -57,7 +57,10 @@ return_top_genes <- function(data, filter_by, new_label, n = 10){
 }
 
 # Wrap for `?function_name``
-docstring(return_top_genes)
+#docstring(return_top_genes)
+
+### Catrine: this makes the helpy thing show up everytime you 
+### load this script.
 
 
 # ------------------------------------------------------------------------------

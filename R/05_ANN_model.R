@@ -13,13 +13,7 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
-PAM50_aug <- read_csv(file = "data/01_PAM50_clean.csv")
-proteome_data_aug <- read_csv(file = "data/01_proteome_data_clean.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
-
-# View the data
-proteome_data_aug %>% print
 
 # View class distribution
 joined_data_aug %>% count(PAM50_mRNA) %>% print
@@ -121,7 +115,7 @@ history = model %>%
 
 # Evaluate model
 # ------------------------------------------------------------------------------
-# OBS THIS ONLY WORKS IF ALL CLASSES IS PRESENT IN y_test 
+# OBS THIS ONLY WORKS IF ALL CLASSES IS PRESENT IN y_test AND gets predicted
 # OTHERWISE, THE FACTORING GOES WRONG.
 perf_test = model %>% evaluate(X_test, y_test)
 acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
@@ -173,3 +167,5 @@ results %>%
 
 # Save results
 #ggsave(filename = "results/ANN_performance.png",device = "png")
+
+

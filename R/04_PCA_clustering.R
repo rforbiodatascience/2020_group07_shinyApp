@@ -186,3 +186,5 @@ proteome_pca_cluster_aug %>%
             score_pca = mean(cluster_pca_correct) * 100)
 
 # should we print the tibble?
+### Catrine: I dont get the result. The PCA result is actually better
+### Than clustering on full data?
