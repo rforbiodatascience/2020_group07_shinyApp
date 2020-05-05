@@ -4,7 +4,7 @@
 Description
 --------------------
 
-An exploratory proteome analysis of breast cancer proteomes dataset as part of the DTU 22100 "R for Data Science" course.
+An exploratory proteome analysis of breast cancer proteomes dataset as part of the DTU 22100 "R for Data Science" course. The project includes an exploritory data analysis, PCA clustering and an ANN on the data.
 
 
 Data
