@@ -29,4 +29,4 @@ Group members
 * Vlad Grigorjev (zidibot)
 * Paula Garcia (paurrodri)  
 * Rebeka Bato (rebekabato)
-* Catrine Høm (cathom)
+* Catrine Høm (catrinehom)
