@@ -1,16 +1,6 @@
 2020\_group07
 ====================
 
-
-Group members
---------------------
-
-* Vlad Grigorjev (zidibot)
-* Paula Garcia (paurrodri)  
-* Rebeka Bato (rebekabato)
-* Catrine Høm (cathom)
-
-
 Description
 --------------------
 
@@ -33,3 +23,10 @@ The data was originally found on Kaggle:
 <https://www.kaggle.com/piotrgrabo/breastcancerproteome>
 
 
+Group members
+--------------------
+
+* Vlad Grigorjev (zidibot)
+* Paula Garcia (paurrodri)  
+* Rebeka Bato (rebekabato)
+* Catrine Høm (cathom)
