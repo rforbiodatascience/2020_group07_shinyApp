@@ -12,7 +12,6 @@ clinical_data_clean <- read_csv(file = "data/01_clinical_data_clean.csv")
 PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 proteome_data_clean <- read_csv(file = "data/01_proteome_data_clean.csv")
 
-
 # Wrangle data
 # ------------------------------------------------------------------------------
 ## Handle NA values in proteome data
@@ -30,6 +29,7 @@ joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>%
 
 #### CATRINE: Leon told us NOT to use the $ to get into the columns
 #### But I don't know how to do the above otherwise.
+### Is it something [[]]-ish?
 
 # Write data
 # ------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # Rewrite a label of HER2-enriched category
-
+### Catrine: Why ?
 joined_data_aug <- joined_data_aug %>% 
                     mutate(PAM50_mRNA = str_replace(PAM50_mRNA,
                                                     pattern = "HER2-enriched",
@@ -29,6 +29,7 @@ joined_data_aug <- joined_data_aug %>%
 # ------------------------------------------------------------------------------
 # Combining x4 Exploratory analysis plots into a single canvas
 # ------------------------------------------------------------------------------
+### Catrine: I think it should be seperate plot.
 # Plot 1/4
 p11 <- clincal_data_aug %>% 
   ggplot(mapping = aes(Gender, 
