@@ -28,7 +28,10 @@ get_legend <- function(myggplot){
 }
 
 # Wrap for `?function_name``
-docstring(get_legend)
+#docstring(get_legend)
+
+### Catrine: this makes the helpy thing show up everytime you 
+### load this script.
 
 # Extract top genes from PAM50_mRNA grouped data:
 # takes the filterby as astring, a new label for the column and a number of genes to return

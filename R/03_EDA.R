@@ -46,7 +46,7 @@ clincal_data_aug %>%
              y = Age_at_Initial_Pathologic_Diagnosis, 
              colour = AJCC_Stage)) +
   geom_violin() + 
-  geom_jitter(alpha = 0.5) +
+  geom_jitter(width = 0.1, height = 0.1, alpha = 0.5) +
   stat_summary(fun=median, geom="point", 
                size=2, color="black") +
   theme_bw(base_family = "Times", 
