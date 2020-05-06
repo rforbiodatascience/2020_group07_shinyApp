@@ -313,3 +313,34 @@ ggsave(plot = plot_TvsPAM50_boxplot, filename = "results/03_EDA_boxplot_T_vs_PAM
        device = "png",
 )
 
+# TEST for violins
+source(file = "R/99_project_functions.R")
+p1_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Basal-like", color = "red")
+p2_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "HER2", color = "green")
+p3_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Luminal A", color = "turquoise3")
+p4_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Luminal B", color = "purple")
+
+
+# Call the helper function for legend extraction
+shared_legend <- get_legend(p4_boxplot)
+
+# Remove the legend from the remaining plot
+p1_boxplot <- p1_boxplot + theme(legend.position = "none")
+p2_boxplot <- p2_boxplot + theme(legend.position = "none")
+p3_boxplot <- p3_boxplot + theme(legend.position = "none")
+p4_boxplot <- p4_boxplot + theme(legend.position = "none")
+
+# Combine the 4 plots and the shared legend
+plot_EDA2_boxplot_combo <- grid.arrange(p1_boxplot,
+                                        p2_boxplot, 
+                                        p3_boxplot, 
+                                        p4_boxplot,
+                                        shared_legend,
+                                        ncol= 2,
+                                        widths = c(2.7, 2.7),
+                                        nrow = 3,
+                                        heights = c(2.7, 2.7, 0.5),
+                                        layout_matrix = rbind(c(1,2), 
+                                                              c(3,4), 
+                                                              c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
+)
