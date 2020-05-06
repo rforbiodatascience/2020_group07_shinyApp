@@ -187,4 +187,4 @@ proteome_pca_cluster_aug %>%
 
 # should we print the tibble?
 ### Catrine: I dont get the result. The PCA result is actually better
-### than clustering on full data?
+### Than clustering on full data?

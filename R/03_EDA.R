@@ -33,12 +33,15 @@ joined_data_aug <- joined_data_aug %>%
 # Catrines plots
 # ------------------------------------------------------------------------------
 ggplot(data = clincal_data_aug) +
-  geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis), 
-                 binwidth = 5
+  geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, fill = PAM50_mRNA), 
+                 binwidth = 7
                  ) +
-  labs(title = "Age at diagnosis",
+  scale_x_continuous(breaks = seq(28, 91, 7)) + 
+  labs(title = "Age at diagnosis with PAM50_mRNA",
        x = 'Age',
-       y = 'Count')
+       y = 'Count') +
+  theme_bw(base_family = "Times", 
+           base_size = 12)
 ggsave(filename = "results/03_EDA_age_distribution.png",device = "png")
 
 clincal_data_aug %>%
