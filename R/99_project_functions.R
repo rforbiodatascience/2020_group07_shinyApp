@@ -94,8 +94,8 @@ plotting_PAM50_density <- function (data) {
 }
 # ------------------------------------------------------------------------------
 # ggplot function for handling a single instance
-plotting_boxplot2 <- function(data, subset_term, color) {
-  data %>%   
+plotting_violinplot <- function(data, subset_term, color) {
+  plot <- data %>%   
     select(patient_ID,
            starts_with("NP_"),
            PAM50_mRNA) %>%
@@ -104,10 +104,9 @@ plotting_boxplot2 <- function(data, subset_term, color) {
     ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
                x = value)
           ) + 
-    geom_boxplot(alpha=0.5,
-                 varwidth = TRUE,
-                 outlier.shape = NA,
-                 fill = color
+    geom_violin(alpha=0.5,
+                scale = "count",
+                fill = color
                  ) + 
     labs(x = "Log2 Expression levels",
          y = "Patients",
@@ -115,7 +114,7 @@ plotting_boxplot2 <- function(data, subset_term, color) {
          ) +
     xlim(-10,10) +
     geom_vline(xintercept = c(-1.5, 0.5), 
-               linetype="dashed")  # based on Control sample profiles
+               linetype="dashed") +  # based on Control sample profiles
     theme_bw(base_family = "Times", 
              base_size = 14) +
     theme(legend.position = "none", 
@@ -124,6 +123,7 @@ plotting_boxplot2 <- function(data, subset_term, color) {
                                     size = 20
                                     )
           )
+    return(plot)
 }
 
 # ------------------------------------------------------------------------------
