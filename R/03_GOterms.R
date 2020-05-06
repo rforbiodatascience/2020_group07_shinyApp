@@ -52,14 +52,14 @@ proteome_data_clean <- df_prot_raw %>%
               values_from = "value") # Make patient_ID (observations) the rows
 
 # Join clinical and proteome data (wide version with ALL genes)
-df_big <- proteome_data_clean %>%
+df_full_dataset <- proteome_data_clean %>%
   right_join(df_clinical,. , by="patient_ID") 
 
 
 
 
 # Data split for each cancer group: without CONTROL samples
-df_small <- joined_data_aug %>%
+df_PAM50 <- joined_data_aug %>%
   select(starts_with("NP_"),
          PAM50_mRNA, patient_ID) %>%
   filter(PAM50_mRNA != "Control") 
@@ -67,15 +67,12 @@ df_small <- joined_data_aug %>%
 
 # For the SMALL df
 # Subset for each group extracting the mean across all patients and then sorted absolute values
-top_genes = 30
+top_genes = 25
 
-df_HER2 <- df_small %>% return_top_genes(filter_by = "HER2-enriched", new_label = "HER2" , n = top_genes)
-
-df_Basal <- df_small %>% return_top_genes(filter_by = "Basal-like", new_label = "Basal", n = top_genes)
-
-df_LumA <- df_small %>% return_top_genes(filter_by = "Luminal A", new_label = "LumA", n = top_genes)
-
-df_LumB <- df_small %>% return_top_genes(filter_by = "Luminal B", new_label = "LumB", n = top_genes)
+df_HER2 <- df_PAM50 %>% return_top_genes(filter_by = "HER2-enriched", new_label = "HER2" , n = top_genes)
+df_Basal <- df_PAM50 %>% return_top_genes(filter_by = "Basal-like", new_label = "Basal", n = top_genes)
+df_LumA <- df_PAM50 %>% return_top_genes(filter_by = "Luminal A", new_label = "LumA", n = top_genes)
+df_LumB <- df_PAM50 %>% return_top_genes(filter_by = "Luminal B", new_label = "LumB", n = top_genes)
 
 # Find a common set between all top genes in each PAM5_mRNA group
 top_gene_intersection <- intersect(intersect(df_HER2,df_LumB ),intersect(df_LumA,df_Basal))
@@ -92,15 +89,12 @@ write_csv(x = top_gene_names,
 
 # For the BIG df
 # Subset for each group extracting the mean across all patients and then sorted absolute values
-top_genes2 = 50
+top_genes2 = 15
 
-df_HER2_full <- df_big %>% return_top_genes(filter_by = "HER2-enriched", new_label = "HER2" , n = top_genes2)
-
-df_Basal_full <- df_big %>% return_top_genes(filter_by = "Basal-like", new_label = "Basal", n = top_genes2)
-
-df_LumA_full <- df_big %>% return_top_genes(filter_by = "Luminal A", new_label = "LumA", n = top_genes2)
-
-df_LumB_full <- df_big %>% return_top_genes(filter_by = "Luminal B", new_label = "LumB", n = top_genes2)
+df_HER2_full <- df_full_dataset %>% return_top_genes(filter_by = "HER2-enriched", new_label = "HER2" , n = top_genes2)
+df_Basal_full <- df_full_dataset %>% return_top_genes(filter_by = "Basal-like", new_label = "Basal", n = top_genes2)
+df_LumA_full <- df_full_dataset %>% return_top_genes(filter_by = "Luminal A", new_label = "LumA", n = top_genes2)
+df_LumB_full <- df_full_dataset %>% return_top_genes(filter_by = "Luminal B", new_label = "LumB", n = top_genes2)
 
 
 # Find a common set between all top genes in each PAM5_mRNA group
@@ -108,7 +102,7 @@ top_gene_intersection_full <- intersect(intersect(df_HER2_full, df_Basal_full),i
 
 
 # Any intersection between the two sets ?
-intersect(top_gene_intersection, top_gene_intersection_full)
+intersect(top_gene_intersection, top_gene_intersection_full) # No intersection between PAM50 genes amongs different subgroups
 
 # Want to map them to gene symbols (PANTHER GO did not recongnize some of the transcript names)
 # top_gene_names_full <- PAM50 %>% rename(new_label = RefSeq_accession_number) %>%
