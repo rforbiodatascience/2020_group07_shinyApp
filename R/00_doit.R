@@ -1,3 +1,13 @@
+# Install packages
+# ------------------------------------------------------------------------------
+if (!requireNamespace("tidyverse", quietly = TRUE))
+  install.packages("tidyverse") 
+if (!requireNamespace("broom", quietly = TRUE))
+  install.packages("broom") 
+if (!requireNamespace("gridExtra", quietly = TRUE))
+  install.packages("gridExtra") 
+
+
 # Run all scripts
 # ------------------------------------------------------------------------------
 source(file = "R/01_load_and_clean.R.R")

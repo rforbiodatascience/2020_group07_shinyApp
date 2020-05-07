@@ -24,9 +24,21 @@ proteome_data_aug <- proteome_data_clean %>%
 ## Join clinical and proteome data (wide version)
 joined_data_aug <- proteome_data_aug %>%
   right_join(clinical_data_clean, ., by = "patient_ID") %>% 
-  # Add PAM50_mRNA class for control samples
-  mutate(PAM50_mRNA = replace_na(PAM50_mRNA, "Control"))
-  
+  # Rename PAM50_mRNA class names
+  rename(class = PAM50_mRNA ) %>% 
+  mutate(class = replace_na(class, "Control"),
+         class = str_replace(class,
+                                  pattern = "HER2-enriched",
+                                  replacement = "HER2"),
+         class = str_replace(class,
+                                  pattern = "Luminal A",
+                                  replacement = "LumA"),
+         class = str_replace(class,
+                                  pattern = "Luminal B",
+                                  replacement = "LumB"),
+         class = str_replace(class,
+                                  pattern = "Basal-like",
+                                  replacement = "Basal"))
 
 
 # Write data

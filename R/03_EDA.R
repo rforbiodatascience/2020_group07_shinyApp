@@ -6,16 +6,13 @@ rm(list = ls())
 # ------------------------------------------------------------------------------
 library("tidyverse")
 library("broom")
-if (!requireNamespace("gridExtra", quietly = TRUE))
-  install.packages("gridExtra") 
-library(gridExtra)
+library("gridExtra")
 
-# Catrine: if we do the install packages (which is pretty smart),
-# We should do it in every script.
 
 # Define functions
 # ------------------------------------------------------------------------------
 source(file = "R/99_project_functions.R")
+
 
 # Load data
 # ------------------------------------------------------------------------------
