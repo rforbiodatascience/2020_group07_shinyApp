@@ -16,19 +16,29 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
-PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
+#clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
+#PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
-# Rewrite a label of HER2-enriched category
-### Catrine: Why ?
-joined_data_aug <- joined_data_aug %>% 
-                    mutate(PAM50_mRNA = str_replace(PAM50_mRNA,
-                                                    pattern = "HER2-enriched",
-                                                    replacement = "HER2"))
+
 
 # Catrines plots
 # ------------------------------------------------------------------------------
+joined_data_aug %>% 
+  ggplot(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, 
+                       fill = PAM50_mRNA)) +
+  geom_histogram(binwidth = 7) +
+  scale_x_continuous(breaks = seq(28, 91, 7)) + 
+  labs(title = "Age at diagnosis with PAM50_mRNA",
+       x = 'Age',
+       y = 'Count') +
+  theme_bw(base_family = "Times", 
+           base_size = 12)
+  
+  
+  
+  
+
 ggplot(data = clincal_data_aug) +
   geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, fill = PAM50_mRNA), 
                  binwidth = 7
