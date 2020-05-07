@@ -32,46 +32,45 @@ replicates <- colnames(proteome_data) %>%
 
 ### Clean file
 proteome_data_clean <- proteome_data %>%
-  select(-gene_symbol, 
-         -gene_name
-         ) %>% # Remove redundant columns
-  select(-replicates
-         )  %>% # Remove replicate columns
-  #select(-c(ends_with("CPTAC")))  %>%  # Remove healthy patients (we have no clincal information on them)
+  select(-gene_symbol, -gene_name) %>% # Remove redundant columns
+  select(-replicates) %>% # Remove replicate columns
+  # Remove non-PAM50 proteins
   semi_join(PAM50_clean, 
-            by = "RefSeq_accession_number"
-            ) %>% # Remove non-PAM50 proteins
-  rename_all(funs(stringr::str_replace_all('\\..*', 
-                                           ''
-                                           ))) %>% # Simplify ID name
+            by = "RefSeq_accession_number") %>%
+  # Simplify ID name
+  rename_all(funs(stringr::str_replace_all(., 
+                                           pattern = '\\..*', 
+                                           replacement = ''))) %>% 
+  # Make proteins (variables) the columns
   pivot_longer(cols = -c("RefSeq_accession_number"),
                names_to = "patient_ID",
-               values_to = "value"
-               ) %>% # Make proteins (variables) the columns
+               values_to = "value" ) %>% 
+  # Make patient_ID (observations) the rows
   pivot_wider(names_from = "RefSeq_accession_number",
-              values_from = "value"
-              ) # Make patient_ID (observations) the rows
-
+              values_from = "value") 
 
 ## Clean clinical data
-clinical_data_clean <- clinical_data %>%
-  mutate(patient_ID = str_remove_all(.$`Complete TCGA ID`, 
-                                     "TCGA-"
-                                     )
-         ) %>% # Simplify ID name
-  select(-`Complete TCGA ID`) %>% # Remove old ID column
+clinical_data_clean <- clinical_data %>% 
+  # Change non-syntactic column names
+  rename_all(funs(str_replace_all(.,
+                                  pattern = c(" "), 
+                                  replacement = "_"))) %>%
+  rename_all(funs(str_replace_all(.,
+                                  pattern = c("-"), 
+                                  replacement = "_"))) %>%
+  # Simplify ID name
+  mutate(patient_ID = str_sub(Complete_TCGA_ID,
+                              start = 6, 
+                              end = -1)) %>%
+  # Remove old ID column
+  select(-Complete_TCGA_ID) %>% 
   semi_join(proteome_data_clean, 
-            by = "patient_ID"
-            ) %>% # Remove clinical data with no protein information
-  select(patient_ID, everything()) # ID column first
+            by = "patient_ID") %>% 
+  # Remove clinical data with no protein information
+  # ID column first
+  select(patient_ID, 
+         everything()) 
 
-# Change non-syntactic column names
-names(clinical_data_clean) <- gsub(" ", 
-                                   "_", 
-                                   names(clinical_data_clean)) # Remove whitespaces in column names
-names(clinical_data_clean) <- gsub("-", 
-                                   "_", 
-                                   names(clinical_data_clean)) # Remove dash in column names
 
 
 # Write data
