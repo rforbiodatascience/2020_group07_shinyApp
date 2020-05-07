@@ -19,7 +19,7 @@ joined_data_aug <- read.csv(file = "data/02_joined_data_aug.csv")
 # Wrangle data
 # ------------------------------------------------------------------------------
 proteome_data <- joined_data_aug %>% 
-  filter(PAM50_mRNA != "Control") %>%  # remove healthy control samples
+  filter(Class != "Control") %>%  # remove healthy control samples
   select(starts_with("NP"))            # select only proteome-count columns
 
 
@@ -42,10 +42,10 @@ pca %>%
   scale_y_continuous(labels = scales::percent)
 ggsave(filename = "results/04_scree_plot.png",device = "png")
 
-### Augment and add y class (PAM50_mRNA clusters)
+### Augment and add y class (Class clusters)
 proteome_pca_aug <- pca %>%
   augment(proteome_data) %>%
-  mutate(class = joined_data_aug$PAM50_mRNA[1:77]) %>% # add class
+  mutate(class = joined_data_aug$Class[1:77]) %>% # add class
   mutate(class = factor(class)) # set class as factor
   # should we change the names of the levels? make them shorter
 

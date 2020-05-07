@@ -33,7 +33,7 @@ get_legend <- function(myggplot){
 ### Catrine: this makes the helpy thing show up everytime you 
 ### load this script.
 
-# Extract top genes from PAM50_mRNA grouped data:
+# Extract top genes from Class grouped data:
 # takes the filterby as astring, a new label for the column and a number of genes to return
 # ------------------------------------------------------------------------------
 # Data split for each cancer group: without CONTROL samples
@@ -46,11 +46,11 @@ return_top_genes <- function(data, filter_by, new_label, n = 10){
   #' @param new_label specify the new column name in the final tible
   #' @param n the number of top expressed genes
   data <- data %>% 
-    select(patient_ID, PAM50_mRNA, starts_with("NP_")) %>%
-    filter(PAM50_mRNA == filter_by) %>%
-    pivot_longer(data = ., cols = -c(PAM50_mRNA, patient_ID)) %>% 
+    select(patient_ID, Class, starts_with("NP_")) %>%
+    filter(Class == filter_by) %>%
+    pivot_longer(data = ., cols = -c(Class, patient_ID)) %>% 
     pivot_wider(data = ., values_from = value, names_from = patient_ID) %>%
-    mutate(avg = rowMeans(select(.,-PAM50_mRNA,-name), na.rm = TRUE)) %>%
+    mutate(avg = rowMeans(select(.,-Class,-name), na.rm = TRUE)) %>%
     mutate(avg = abs(avg)) %>%
     arrange(desc(avg)) %>%
     select(name) %>%
@@ -69,13 +69,13 @@ return_top_genes <- function(data, filter_by, new_label, n = 10){
 # ------------------------------------------------------------------------------
 # Function: Use the data splits based on PAM50 subtype to generate plots iteratively
 plotting_PAM50_density <- function (data) {
-  subset <- data %>% select(PAM50_mRNA) %>% unique(.)
+  subset <- data %>% select(Class) %>% unique(.)
   title <- paste0(subset," tissue: Density")
   file_prefex <- "results/03_EDA_tissue_"
   file_suffix <- "_density.png"
   data %>%   select(patient_ID,
                     starts_with("NP_"),
-                    PAM50_mRNA
+                    Class
   ) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
     ggplot(aes( x=value, 
@@ -98,8 +98,8 @@ plotting_violinplot <- function(data, subset_term, color) {
   plot <- data %>%   
     select(patient_ID,
            starts_with("NP_"),
-           PAM50_mRNA) %>%
-    subset(PAM50_mRNA == subset_term) %>%
+           Class) %>%
+    subset(Class == subset_term) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
     ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
                x = value)
@@ -133,8 +133,8 @@ plotting_boxplot <- function(data, subset_term, color) {
   plot <- data %>%   
     select(patient_ID,
            starts_with("NP_"),
-           PAM50_mRNA) %>%
-    subset(PAM50_mRNA == subset_term) %>%
+           Class) %>%
+    subset(Class == subset_term) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
     ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
                x = value)
@@ -186,8 +186,8 @@ plotting_boxplot <- function(data, subset_term, color) {
 # joined_data_aug %>%
 #   select(patient_ID,
 #          starts_with("NP_"),
-#          PAM50_mRNA) %>%
-#   subset(PAM50_mRNA == subset_term) %>%
+#          Class) %>%
+#   subset(Class == subset_term) %>%
 #   pivot_longer(cols = starts_with('NP_')) %>%
 
 

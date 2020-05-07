@@ -21,41 +21,34 @@ source(file = "R/99_project_functions.R")
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 
+# Wrangle data
+# ------------------------------------------------------------------------------
+joined_data_aug <- joined_data_aug %>%
+  filter(Class != "Control") 
 
-# Catrines plots
+# Plot: Age distribution in different cancer types
 # ------------------------------------------------------------------------------
 joined_data_aug %>% 
   ggplot(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, 
-                       fill = PAM50_mRNA)) +
-  geom_histogram(binwidth = 7) +
-  scale_x_continuous(breaks = seq(28, 91, 7)) + 
-  labs(title = "Age at diagnosis with PAM50_mRNA",
+                       fill = Class)) +
+  geom_histogram(binwidth = 10) +
+  scale_x_continuous(breaks = seq(20, 100, 10)) + 
+  labs(title = "Age distribution in different cancer types",
        x = 'Age',
        y = 'Count') +
   theme_bw(base_family = "Times", 
-           base_size = 12)
-  
-  
-  
-  
-
-ggplot(data = clincal_data_aug) +
-  geom_histogram(mapping = aes(x = Age_at_Initial_Pathologic_Diagnosis, fill = PAM50_mRNA), 
-                 binwidth = 7
-                 ) +
-  scale_x_continuous(breaks = seq(28, 91, 7)) + 
-  labs(title = "Age at diagnosis with PAM50_mRNA",
-       x = 'Age',
-       y = 'Count') +
-  theme_bw(base_family = "Times", 
-           base_size = 12)
+           base_size = 18) +
+  theme(plot.title = element_text(hjust = 0.5, 
+                                size = 25))
 ggsave(filename = "results/03_EDA_age_distribution.png",device = "png")
 
-clincal_data_aug %>%
+# Plot: COME BACK TO IT
+# ------------------------------------------------------------------------------
+joined_data_aug %>%
   ggplot(aes(x = AJCC_Stage, 
              y = Age_at_Initial_Pathologic_Diagnosis, 
              colour = AJCC_Stage)) +
-  geom_violin() + 
+  geom_violin(scale = "area") + 
   geom_jitter(width = 0.1, height = 0.1, alpha = 0.5) +
   stat_summary(fun=median, geom="point", 
                size=2, color="black") +
@@ -64,135 +57,36 @@ clincal_data_aug %>%
   labs(title = "Age versus cancer severity",
        x = 'AJJC stage',
        y = 'Age at initial diagnosis')
+
 ggsave(filename = "results/03_EDA_age_cancer_severity.png",device = "png")
 
+# Plot: Gender distribution 
 # ------------------------------------------------------------------------------
-# Combining x4 Exploratory analysis plots into a single canvas
-# ------------------------------------------------------------------------------
-### Catrine: I think it should be seperate plot.
-# Plot 1/4
-p11 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(Gender, 
-                       fill = PAM50_mRNA
-  )
-  ) +
+joined_data_aug %>% 
+  ggplot(mapping = aes(Gender)) +
   geom_bar() +
   theme_bw(base_family = "Times", 
-           base_size = 12
-  ) +
-  labs(y = "Count",
-       title = "PAM50 tumor subtype: occurance based on gender"
-  ) +
-  theme(plot.title = element_text(hjust = 0.5, 
-                                  size = 14
-  )
-  ) 
-# Save the plot then remove the legend for the canvas
-ggsave(plot = p11,"results/03_EDA_gender_vs_tumortype.png", device = "png")    
-p11 <- p11 + theme(legend.position = "none")
-
-# Plot 2/4
-p22 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(y = PAM50_mRNA, 
-                       x = Metastasis_Coded,
-                       colour = PAM50_mRNA
-  )
-  ) +
-  geom_jitter(width = 0.15, 
-              size=2
-  ) +
-  theme_bw(base_family = "Times", 
-           base_size = 12
-  ) +
-  labs(x = "Metastasis",
-       y = "PAM50 tumor subtype",
-       title = "Metastasis of different tumor subtypes"
-  ) +
-  theme(plot.title = element_text(hjust = 0.5, 
-                                  size = 14
-  )
-  )
-
-# Save then remove the legend
-ggsave(plot = p22, "results/03_EDA_metastatis_vs_tumortype.png", device = "png")
-p22 <- p22 + theme(legend.position = "none")
-
-# Plot 3/4
-p33 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(y = PAM50_mRNA, 
-                       x = methylation_Clusters,
-                       colour = PAM50_mRNA
-  )
-  ) +
-  geom_jitter(width = 0.1, 
-              size = 2
-  ) +
-  theme_bw(base_family = "Times", 
-           base_size = 12
-  ) +
-  labs(y = "PAM50 tumor subtype",
-       x = "Methylation cluster",
-       title = "Methylation clusters of different tumor subtypes"
-  ) +
-  theme(plot.title = element_text(hjust = 0.5, 
-                                  size = 14
-  )
-  ) 
-
-# Save then remove the legend
-ggsave(plot = p33, "results/03_EDA_methylCluster_vs_tumorType.png", device = "png")
-p33 <- p33 + theme(legend.position = "none")
-
-# Plot 4/4
-p44 <- clincal_data_aug %>% 
-  ggplot(mapping = aes(y = PAM50_mRNA, 
-                       x = Age_at_Initial_Pathologic_Diagnosis,
-                       colour = PAM50_mRNA)) +
-  geom_violin(scale = "area", 
-              trim = TRUE,
-              mapping = aes(fill=Tumor)) +
-  #geom_dotplot(binaxis='x', dotsize=1) +
-  stat_summary(fun=median, geom="point", 
-               size=2, color="black") +
-  theme_bw(base_family = "Times", 
            base_size = 12) +
-  labs(y = "PAM50 tumor subtype",
-       x = " Age at initial diagnosis",
-       title = "Tumor subtype based on person's age"
-  ) +
+  labs(y = "Count",
+       title = "Gender distribution") +
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 14))
 
-# Save
-ggsave(plot = p44, "results/03_EDA_age_vs_tumorType.png", device = "png")
+ggsave(filename = "results/03_EDA_gender_vs_tumortype.png", device = "png")   
 
-# Make legend adjustments
-legend_temp <- p44 + theme(legend.text = element_text(size = 20),
-                           legend.title = element_text(size = 20),
-                           legend.key.size = unit(20,"point"),
-                           legend.position = "bottom") 
+# Plot: Class distribution across patients: REORDER THE BARS
+# ------------------------------------------------------------------------------
+joined_data_aug %>% 
+  ggplot(mapping = aes(Class, fill = Class)) +
+  geom_bar() +
+  theme_bw(base_family = "Times", 
+           base_size = 12) +
+  labs(y = "Count",
+       title = "Class distribution across patients") +
+  theme(plot.title = element_text(hjust = 0.5, 
+                                  size = 14))
 
-# Remove the "legend object"
-shared_legend <- get_legend(legend_temp)
-
-# Remove the legend from the original plot
-p44 <- p44 + theme(legend.position = "none")
-
-# Combine the 4 plots and the shared legend
-plot_EDA1 <- grid.arrange(p11, p22, p33, p44, shared_legend,
-                          ncol= 2,
-                          widths = c(2.7, 2.7),
-                          nrow = 3,
-                          heights = c(2.7, 2.7, 0.5),
-                          layout_matrix = rbind(c(1,2), 
-                                                c(3,4), 
-                                                c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
-)
-
-# Save the combined plot
-ggsave(plot=plot_EDA1, "results/03_EDA_grid4_combo.png", device = "png" )
-
-
+ggsave(filename = "results/03_EDA_class_distribution.png", device = "png")    
 
 
 # HEATMAP MATRIX
@@ -203,7 +97,7 @@ joined_data_aug_mat <- joined_data_aug
 joined_data_aug_mat[is.na(joined_data_aug_mat)] <- 0
 
 mtx <- joined_data_aug_mat %>%
-  filter(PAM50_mRNA != "Control") %>%
+  filter(Class != "Control") %>%
   column_to_rownames( ., "patient_ID") %>%
   select(starts_with("NP_"))
 
@@ -214,9 +108,9 @@ mtx <- mtx %>%
 
 # Create an annotation file: assign row names and their respective tissue types
 annotation <- joined_data_aug_mat %>% 
-  filter(PAM50_mRNA != "Control") %>%
+  filter(Class != "Control") %>%
   column_to_rownames(., "patient_ID") %>%
-  rename('PAM50 Profile' = PAM50_mRNA) %>%
+  rename('PAM50 Profile' = Class) %>%
   select('PAM50 Profile')
 
 mtx %>%  pheatmap( .,
@@ -234,18 +128,14 @@ mtx %>%  pheatmap( .,
 dev.off()
 
 
-
-
-
 # BOXPLOTS: combining 4x plots into one canvas
 # ------------------------------------------------------------------------------
 # Mappings between the subsets and the plotting function:
 # Creating a separate plot while gettign colored individually, to be combined later
-source(file = "R/99_project_functions.R")
-p1_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Basal-like", color = "red")
+p1_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Basal", color = "red")
 p2_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "HER2", color = "green")
-p3_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Luminal A", color = "turquoise3")
-p4_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "Luminal B", color = "purple")
+p3_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "LumA", color = "turquoise3")
+p4_boxplot <- plotting_boxplot(data = joined_data_aug, subset_term = "LumB", color = "purple")
 
 
 # Call the helper function for legend extraction
@@ -269,14 +159,11 @@ plot_EDA2_boxplot_combo <- grid.arrange(p1_boxplot,
                                         heights = c(2.7, 2.7, 0.5),
                                         layout_matrix = rbind(c(1,2), 
                                                               c(3,4), 
-                                                              c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
-)
-
+                                                              c(5,5))) # to bind the legend as a shared 3rd row c(el.5, el.5)
 
 ggsave(plot = plot_EDA2_boxplot_combo, filename = "results/03_EDA_boxplot_combined.png",
        device = "png",
-       height = 5,
-)
+       height = 5)
 
 ### Catrine: the black line is the control samples... median +/- something?
 ### Why is some samples outside the range?
@@ -286,9 +173,9 @@ plot_TvsPAM50_boxplot <- joined_data_aug %>%
   select(patient_ID,
          Tumor,
          starts_with("NP_"),
-         PAM50_mRNA
+         Class
   ) %>%
-  filter(PAM50_mRNA != "Control") %>%
+  filter(Class != "Control") %>%
   pivot_longer(cols = starts_with('NP_')) %>%
   ggplot(aes( y = patient_ID, 
               x = value,
@@ -297,7 +184,7 @@ plot_TvsPAM50_boxplot <- joined_data_aug %>%
   geom_boxplot(alpha= 0.5,
                varwidth = TRUE,
                outlier.shape = NA,
-               mapping = aes(fill=PAM50_mRNA)
+               mapping = aes(fill=Class)
                
   ) + 
   labs(x = "Log2 Expression levels",
@@ -324,11 +211,10 @@ ggsave(plot = plot_TvsPAM50_boxplot, filename = "results/03_EDA_boxplot_T_vs_PAM
 )
 
 # TEST for violins
-source(file = "R/99_project_functions.R")
-p1_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Basal-like", color = "red")
+p1_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Basal", color = "red")
 p2_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "HER2", color = "green")
-p3_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Luminal A", color = "turquoise3")
-p4_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Luminal B", color = "purple")
+p3_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "LumA", color = "turquoise3")
+p4_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "LumB", color = "purple")
 
 
 # Call the helper function for legend extraction
@@ -352,5 +238,4 @@ plot_EDA2_boxplot_combo <- grid.arrange(p1_boxplot,
                                         heights = c(2.7, 2.7, 0.5),
                                         layout_matrix = rbind(c(1,2), 
                                                               c(3,4), 
-                                                              c(5,5)) # to bind the legend as a shared 3rd row c(el.5, el.5)
-)
+                                                              c(5,5))) # to bind the legend as a shared 3rd row c(el.5, el.5)

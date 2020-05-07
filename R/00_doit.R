@@ -6,7 +6,8 @@ if (!requireNamespace("broom", quietly = TRUE))
   install.packages("broom") 
 if (!requireNamespace("gridExtra", quietly = TRUE))
   install.packages("gridExtra") 
-
+if (!requireNamespace("patchwork", quietly = TRUE))
+  install.packages("patchwork") 
 
 # Run all scripts
 # ------------------------------------------------------------------------------
