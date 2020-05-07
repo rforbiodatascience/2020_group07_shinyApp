@@ -8,6 +8,12 @@ if (!requireNamespace("gridExtra", quietly = TRUE))
   install.packages("gridExtra") 
 if (!requireNamespace("patchwork", quietly = TRUE))
   install.packages("patchwork") 
+if (!requireNamespace("keras", quietly = TRUE))
+  install.packages("keras") 
+if (!requireNamespace("miniconda", quietly = TRUE))
+  install.packages("miniconda") 
+if (!requireNamespace("tensorflow", quietly = TRUE))
+  install.packages("tensorflow") 
 
 # Run all scripts
 # ------------------------------------------------------------------------------

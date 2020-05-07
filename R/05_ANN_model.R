@@ -15,24 +15,18 @@ source(file = "R/99_project_functions.R")
 # ------------------------------------------------------------------------------
 joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
-# View class distribution
-joined_data_aug %>% count(PAM50_mRNA) %>% print
-
 # Prepare data
 # ------------------------------------------------------------------------------
-# Partition into data_type where test (~10%) and training set (~90%)
-
+# Partition into data_type where test (~30%) and training set (~70%)
+set.seed(11)
 joined_data_aug <- joined_data_aug  %>% 
-  filter(PAM50_mRNA %in% c("Basal-like", "HER2-enriched", "Luminal A", "Luminal B")) %>% # Remove control samples (too few samples in this group)
+  filter(Class %in% c("Basal", "HER2", "LumA", "LumB")) %>% # Remove control samples (too few samples in this group)
   mutate(data_type = sample(10, size = nrow(.), replace = TRUE))  %>% # give a random number between 1 and 10 (to divide data in train and test later)
-  mutate(PAM50_mRNA_bin = case_when(PAM50_mRNA == "Basal-like" ~ 0,
-                                    PAM50_mRNA == "HER2-enriched" ~ 1,
-                                    PAM50_mRNA == "Luminal A" ~ 2,
-                                    PAM50_mRNA == "Luminal B" ~ 3)) %>%
-  select(patient_ID, starts_with("NP"), data_type, PAM50_mRNA_bin) 
-
-joined_data_aug %>% count(PAM50_mRNA_bin) %>% print
-
+  mutate(Class_num = case_when(Class == "Basal" ~ 0,
+                                    Class == "HER2" ~ 1,
+                                    Class == "LumA" ~ 2,
+                                    Class == "LumB" ~ 3)) %>%
+  select(patient_ID, starts_with("NP"), data_type, Class_num) 
 
 # Define training and test feature matrices
 X_train = joined_data_aug %>%
@@ -49,11 +43,12 @@ X_test = joined_data_aug %>%
 # Define known target classes for training and test data
 y_train = joined_data_aug %>%
   filter(data_type > 3 ) %>%
-  pull(PAM50_mRNA_bin) %>% 
+  pull(Class_num) %>% 
   to_categorical
+
 y_test = joined_data_aug %>%
   filter(data_type <= 3 ) %>%
-  pull(PAM50_mRNA_bin) %>% 
+  pull(Class_num) %>% 
   to_categorical
 
 
@@ -118,9 +113,9 @@ history = model %>%
 # OBS THIS ONLY WORKS IF ALL CLASSES GETS PREDICTED
 # OTHERWISE, THE FACTORING GOES WRONG.
 perf_test = model %>% evaluate(X_test, y_test)
-acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
+acc_test = perf_test %>% pluck('accuracy') %>% round(3) * 100
 perf_train = model %>% evaluate(X_train, y_train)
-acc_train = perf_train %>% pluck('acc') %>% round(3) * 100
+acc_train = perf_train %>% pluck('accuracy') %>% round(3) * 100
 results = bind_rows(
   tibble(y_true = y_test %>%
            apply(1, function(x){ return( which(x==1) - 1) }) %>%
@@ -165,6 +160,7 @@ results %>%
                      values = c('tomato','cornflowerblue')) +
   facet_wrap(~data_type, nrow = 1)
 
+# Catrine: FLip plots, so train first, then test
 # Save results
 #ggsave(filename = "results/05_ANN_performance.png",device = "png")
 

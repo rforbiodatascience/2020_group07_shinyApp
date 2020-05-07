@@ -14,13 +14,17 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-joined_data_aug <- read.csv(file = "data/02_joined_data_aug.csv")
+joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # Wrangle data
 # ------------------------------------------------------------------------------
-proteome_data <- joined_data_aug %>% 
-  filter(Class != "Control") %>%  # remove healthy control samples
-  select(starts_with("NP"))            # select only proteome-count columns
+# Remove healthy control samples
+joined_data_aug <- joined_data_aug %>% 
+  filter(Class != "Control")
+
+proteome_data <- joined_data_aug %>%
+  # select only proteome-count columns
+  select(starts_with("NP"))            
 
 
 # PCA 
@@ -38,35 +42,36 @@ pca %>%
        x = "Principal components",
        y = "variance explained (%)") +
   theme(plot.title = element_text(hjust = 0.5)) +
-  theme_gray() +
+  theme_bw() +
   scale_y_continuous(labels = scales::percent)
-ggsave(filename = "results/04_scree_plot.png",device = "png")
 
-### Augment and add y class (Class clusters)
+ggsave(filename = "results/04_scree_plot.png", device = "png")
+
+### Augment and add y class
 proteome_pca_aug <- pca %>%
   augment(proteome_data) %>%
-  mutate(class = joined_data_aug$Class[1:77]) %>% # add class
-  mutate(class = factor(class)) # set class as factor
-  # should we change the names of the levels? make them shorter
+  mutate(Class = as_factor(joined_data_aug$Class))
 
 
 ### Scatter proteome data - PC1/PC2
 proteome_pca_aug %>% 
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = class)) +
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = Class)) +
   geom_point() +
   labs(title = "PCA - proteome data", 
        x = "PC1",
        y = "PC2") +
+  theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
-ggsave(filename = "results/04_PCA.png",device = "png")
+ggsave(filename = "results/04_PCA.png", device = "png")
 
 
 
 # K-means clustering
 # ------------------------------------------------------------------------------
-k = length(levels(proteome_pca_aug$class)) # 4 levels
+k = length(levels(proteome_pca_aug$Class)) # 4 levels
 
 ### Clustering on original data
+set.seed(12)
 cluster_original <- proteome_data %>%
   kmeans(centers = k)
 
@@ -96,12 +101,12 @@ proteome_pca_cluster_aug <-
 plot1 <- proteome_pca_cluster_aug %>%
   ggplot(aes(x = .fittedPC1, 
              y = .fittedPC2, 
-             colour = class)) +
+             colour = Class)) +
   geom_point() +
   labs(title = "Original data",
        x = 'PC1',
        y = 'PC2',
-       colour = "class") +
+       colour = "real class") +
   theme(plot.title = element_text(hjust = 0.5),
         legend.position = "bottom",
         legend.title.align = 0.5,
@@ -149,7 +154,6 @@ plot3 <- proteome_pca_cluster_aug %>%
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
         legend.position = "bottom",
-        #legend.box = "horizontal",
         legend.title.align=0.5,
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
@@ -166,25 +170,25 @@ ggsave(filename = "results/04_PCA_kmeans.png",
 
 proteome_pca_cluster_aug %>%
   
-  select(class, cluster_original, cluster_pca) %>%
+  select(Class, cluster_original, cluster_pca) %>%
   
-  mutate(cluster_original = case_when(cluster_original == 1 ~ "Basal-like",
-                                 cluster_original == 2 ~ "Luminal B",
-                                 cluster_original == 3 ~ "HER2-enriched",
-                                 cluster_original == 4 ~ "Luminal A"),
-         cluster_pca = case_when(cluster_pca == 1 ~ "HER2-enriched",
-                                 cluster_pca == 2 ~ "Luminal B",
-                                 cluster_pca == 3 ~ "Luminal A",
-                                 cluster_pca == 4 ~ "Basal-like"),
+  mutate(cluster_original = case_when(cluster_original == 1 ~ "HER2",
+                                 cluster_original == 2 ~ "Basal",
+                                 cluster_original == 3 ~ "LumB",
+                                 cluster_original == 4 ~ "LumA"),
+         cluster_pca = case_when(cluster_pca == 1 ~ "Basal",
+                                 cluster_pca == 2 ~ "LumA",
+                                 cluster_pca == 3 ~ "HER2",
+                                 cluster_pca == 4 ~ "LumB"),
          
-         cluster_original_correct = case_when(class == cluster_original ~ 1,
-                                         class != cluster_original ~ 0),
-         cluster_pca_correct = case_when(class == cluster_pca ~ 1,
-                                         class != cluster_pca ~ 0)) %>% 
+         cluster_original_correct = case_when(Class == cluster_original ~ 1,
+                                         Class != cluster_original ~ 0),
+         cluster_pca_correct = case_when(Class == cluster_pca ~ 1,
+                                         Class != cluster_pca ~ 0)) %>% 
   
   summarise(score_original = mean(cluster_original_correct) * 100,
             score_pca = mean(cluster_pca_correct) * 100)
-
-# should we print the tibble?
-### Catrine: I dont get the result. The PCA result is actually better
-### Than clustering on full data?
+# save the tibble!
+# score_original score_pca
+#         <dbl>     <dbl>
+#         62.3      68.8
