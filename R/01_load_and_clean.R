@@ -16,24 +16,32 @@ proteome_data <- read_csv(file = "data/_raw/77_cancer_proteomes_CPTAC_itraq.csv"
 # ------------------------------------------------------------------------------
 ## Clean PAM50 data
 PAM50_clean <- PAM50 %>%
-  select(-Species) %>% # Remove redundant column
-  select(RefSeqProteinID, everything()) %>% # ID column first
+  # Remove redundant column
+  select(-Species) %>% 
+  # ID column first
+  select(RefSeqProteinID, everything()) %>% 
+  # Rename columns to similiar column names as in proteome_data
   rename(RefSeq_accession_number = "RefSeqProteinID",
          gene_symbol = "GeneSymbol",
-         gene_name = "Gene Name") # Rename columns to similiar column names as in proteome_data
+         gene_name = "Gene Name") 
 
 
 ## Clean proteome data
 ### Identify patient_ID replicates 
 replicates <- colnames(proteome_data) %>% 
-  str_replace_all(., '\\..*', '') %>% # Simplify ID name
-  duplicated() %>% # Find replicates (true/false)
-  colnames(proteome_data)[.] # Extract replicate column names (excluding first apperance)
+  # Simplify ID name
+  str_replace_all(., '\\..*', '') %>% 
+  # Find replicates (true/false)
+  duplicated() %>% 
+  # Extract replicate column names (excluding first apperance)
+  colnames(proteome_data)[.] 
 
 ### Clean file
 proteome_data_clean <- proteome_data %>%
-  select(-gene_symbol, -gene_name) %>% # Remove redundant columns
-  select(-replicates) %>% # Remove replicate columns
+  # Remove redundant columns
+  select(-gene_symbol, -gene_name) %>% 
+  # Remove replicate columns
+  select(-replicates) %>% 
   # Remove non-PAM50 proteins
   semi_join(PAM50_clean, 
             by = "RefSeq_accession_number") %>%
@@ -48,6 +56,7 @@ proteome_data_clean <- proteome_data %>%
   # Make patient_ID (observations) the rows
   pivot_wider(names_from = "RefSeq_accession_number",
               values_from = "value") 
+
 
 ## Clean clinical data
 clinical_data_clean <- clinical_data %>% 
@@ -64,9 +73,9 @@ clinical_data_clean <- clinical_data %>%
                               end = -1)) %>%
   # Remove old ID column
   select(-Complete_TCGA_ID) %>% 
+  # Remove clinical data with no protein information
   semi_join(proteome_data_clean, 
             by = "patient_ID") %>% 
-  # Remove clinical data with no protein information
   # ID column first
   select(patient_ID, 
          everything()) 

@@ -15,21 +15,19 @@ proteome_data_clean <- read_csv(file = "data/01_proteome_data_clean.csv")
 # Wrangle data
 # ------------------------------------------------------------------------------
 ## Handle NA values in proteome data
-proteome_data_aug = proteome_data_clean %>% 
-  discard(~sum(is.na(.x))/length(.x) >= 0.5) %>% # Remove genes with too many na's (over 50%)
-  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) # Take median value to replace NA values
+proteome_data_aug <- proteome_data_clean %>% 
+  # Remove genes with too many NAs (over 50%)
+  discard(~sum(is.na(.x))/length(.x) >= 0.5) %>% 
+  # Take median value to replace NA values
+  mutate_all(~ifelse(is.na(.), median(., na.rm = TRUE), .)) 
 
-### Join clinical and proteome data (wide version)
+## Join clinical and proteome data (wide version)
 joined_data_aug <- proteome_data_aug %>%
-  right_join(clinical_data_clean,. , by="patient_ID") 
+  right_join(clinical_data_clean, ., by = "patient_ID") %>% 
+  # Add PAM50_mRNA class for control samples
+  mutate(PAM50_mRNA = replace_na(PAM50_mRNA, "Control"))
+  
 
-### Add PAM50_mRNA class for control samples
-joined_data_aug$PAM50_mRNA <- joined_data_aug$PAM50_mRNA %>% 
-  replace_na("Control") 
-
-#### CATRINE: Leon told us NOT to use the $ to get into the columns
-#### But I don't know how to do the above otherwise.
-### Is it something [[]]-ish?
 
 # Write data
 # ------------------------------------------------------------------------------
