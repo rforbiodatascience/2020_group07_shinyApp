@@ -48,9 +48,13 @@ return_top_genes <- function(data, filter_by, new_label, n = 10){
   data <- data %>% 
     select(patient_ID, Class, starts_with("NP_")) %>%
     filter(Class == filter_by) %>%
-    pivot_longer(data = ., cols = -c(Class, patient_ID)) %>% 
-    pivot_wider(data = ., values_from = value, names_from = patient_ID) %>%
-    mutate(avg = rowMeans(select(.,-Class,-name), na.rm = TRUE)) %>%
+    pivot_longer(data = ., 
+                 cols = -c(Class, patient_ID)) %>% 
+    pivot_wider(data = ., 
+                values_from = value, 
+                names_from = patient_ID) %>%
+    mutate(avg = rowMeans(select(.,-Class,-name),
+                          na.rm = TRUE)) %>%
     mutate(avg = abs(avg)) %>%
     arrange(desc(avg)) %>%
     select(name) %>%
@@ -75,12 +79,11 @@ plotting_PAM50_density <- function (data) {
   file_suffix <- "_density.png"
   data %>%   select(patient_ID,
                     starts_with("NP_"),
-                    Class
-  ) %>%
+                    Class) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes( x=value, 
-                fill=patient_ID
-    )) + 
+    ggplot(aes(x = value, 
+               fill = patient_ID)
+           ) + 
     geom_density(alpha=0.5) + 
     geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
     ggtitle(title) +
@@ -93,43 +96,12 @@ plotting_PAM50_density <- function (data) {
           device = "png")
 }
 # ------------------------------------------------------------------------------
-# ggplot function for handling a single instance
-plotting_violinplot <- function(data, subset_term, color) {
-  plot <- data %>%   
-    select(patient_ID,
-           starts_with("NP_"),
-           Class) %>%
-    subset(Class == subset_term) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
-               x = value)
-          ) + 
-    geom_violin(alpha=0.5,
-                scale = "count",
-                fill = color
-                 ) + 
-    labs(x = "Log2 Expression levels",
-         y = "Patients",
-         title = subset_term
-         ) +
-    xlim(-10,10) +
-    geom_vline(xintercept = c(-1.5, 0.5), 
-               linetype="dashed") +  # based on Control sample profiles
-    theme_bw(base_family = "Times", 
-             base_size = 14) +
-    theme(legend.position = "none", 
-          axis.text.y = element_blank(),
-          plot.title = element_text(hjust = 0.5,
-                                    size = 20
-                                    )
-          )
-    return(plot)
-}
-
 # ------------------------------------------------------------------------------
 # ggplot function for handling a single instance
 # This one would add the reference line legend
-plotting_boxplot <- function(data, subset_term, color) {
+plotting_boxplot <- function(data, subset_term, color, 
+                             control_range = control_range, 
+                             control_range_colour = "yellow1") {
   plot <- data %>%   
     select(patient_ID,
            starts_with("NP_"),
@@ -137,44 +109,42 @@ plotting_boxplot <- function(data, subset_term, color) {
     subset(Class == subset_term) %>%
     pivot_longer(cols = starts_with('NP_')) %>%
     ggplot(aes(y = reorder(patient_ID, value,FUN = median), 
-               x = value)
-    ) + 
+               x = value)) + 
     geom_boxplot(alpha=0.5,
                  varwidth = TRUE,
                  outlier.shape = NA,
-                 fill = color
-    ) + 
+                 fill = color) + 
     labs(x = "Log2 Expression levels",
          y = "Patients",
-         title = subset_term
-    ) +
+         title = subset_term) +
     xlim(-10,10) +
-    geom_vline(aes(xintercept=c(0.5),
+    geom_vline(aes(xintercept=control_range[2],
                    color="Range"), 
                linetype="solid",
                size=1) +
-    geom_vline(aes(xintercept=c(-1.5),
-                   #color="Lower Bound"
-                   ), 
+    geom_vline(aes(xintercept=control_range[1]), 
                linetype="solid",
                size=1) +
     scale_color_manual(name = "Control samples:", 
                        values = c('Range' = "black", 
                                   'Lower Bound' = "grey12")
-                                  ) +
+                      ) +
     stat_summary(fun = "median", 
                  geom = "point", 
                  colour = "white", 
                  shape = 23, 
-                 size = 1,) +
+                 size = 1) +
     theme_bw(base_family = "Times", 
-           base_size = 20,) +
+             base_size = 20) +
     theme(legend.position = "bottom",
           axis.text.y = element_blank(),
           plot.title = element_text(hjust = 0.5,
-                                    size = 20
-          )
-    )
+                                    size = 20)
+          ) +
+    annotate("rect", 
+             xmin= control_range[1], xmax=control_range[2], # supply from data
+             ymin=-Inf, ymax=Inf,
+             alpha=0.3, fill= control_range_colour) 
   return(plot)
 }
 
@@ -192,4 +162,10 @@ plotting_boxplot <- function(data, subset_term, color) {
 
 
 # ------------------------------------------------------------------------------
+# Set up the plot's theme to be consistent across all plots
+myplot_aes <-   theme_bw(base_family = "Times", 
+                         base_size = 18) +
+                theme(plot.title = 
+                        element_text(hjust = 0.5, 
+                                     size = 25))
 # ------------------------------------------------------------------------------
