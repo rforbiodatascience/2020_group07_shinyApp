@@ -17,36 +17,40 @@ joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
 
 # Prepare data
 # ------------------------------------------------------------------------------
-# Partition into data_type where test (~30%) and training set (~70%)
-set.seed(11)
-joined_data_aug <- joined_data_aug  %>% 
-  filter(Class %in% c("Basal", "HER2", "LumA", "LumB")) %>% # Remove control samples (too few samples in this group)
-  mutate(data_type = sample(10, size = nrow(.), replace = TRUE))  %>% # give a random number between 1 and 10 (to divide data in train and test later)
+# Partition data with data_type column where test (~30%) and training set (~70%)
+set.seed(100)
+joined_data_prep <- joined_data_aug  %>% 
+  # Remove control samples (too few samples in this group)
+  filter(Class %in% c("Basal", "HER2", "LumA", "LumB")) %>% 
+  # Give a random number between 1 and 10 (to use for dividing data in train and test)
+  mutate(data_type = sample(10, size = nrow(.), replace = TRUE))  %>% 
+  # Make a numbered class
   mutate(Class_num = case_when(Class == "Basal" ~ 0,
                                     Class == "HER2" ~ 1,
                                     Class == "LumA" ~ 2,
                                     Class == "LumB" ~ 3)) %>%
+  # Select only relevant columns
   select(patient_ID, starts_with("NP"), data_type, Class_num) 
 
 # Define training and test feature matrices
-X_train = joined_data_aug %>%
+X_train = joined_data_prep %>%
   filter(data_type > 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
          
-X_test = joined_data_aug %>%
+X_test = joined_data_prep %>%
   filter(data_type <= 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
   
 
 # Define known target classes for training and test data
-y_train = joined_data_aug %>%
+y_train = joined_data_prep %>%
   filter(data_type > 3 ) %>%
   pull(Class_num) %>% 
   to_categorical
 
-y_test = joined_data_aug %>%
+y_test = joined_data_prep %>%
   filter(data_type <= 3 ) %>%
   pull(Class_num) %>% 
   to_categorical
@@ -70,7 +74,7 @@ h4_activate = 'relu'
 drop_out_4 = 0.1
 n_output   = 4
 o_ativate  = 'softmax'
-n_epochs = 150
+n_epochs = 100
 batch_size = 50
 loss_func = 'categorical_crossentropy'
 learn_rate = 0.001
@@ -91,31 +95,25 @@ model = keras_model_sequential() %>%
 model %>%
   compile(loss = loss_func,
           optimizer = optimizer_rmsprop(lr = learn_rate),
-          metrics = c('accuracy')
-  )
+          metrics = c('accuracy'))
 
-# View model
-model %>% summary %>% print
 
 # Train model
 # ------------------------------------------------------------------------------
-
 history = model %>%
   fit(x = X_train,
       y = y_train,
       epochs = n_epochs,
       batch_size = batch_size,
-      validation_split = 0
-  )
+      validation_split = 0)
 
 # Evaluate model
 # ------------------------------------------------------------------------------
-# OBS THIS ONLY WORKS IF ALL CLASSES GETS PREDICTED
-# OTHERWISE, THE FACTORING GOES WRONG.
+# All classes needs to be predicted for the factoring to work
 perf_test = model %>% evaluate(X_test, y_test)
-acc_test = perf_test %>% pluck('accuracy') %>% round(3) * 100
+acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
 perf_train = model %>% evaluate(X_train, y_train)
-acc_train = perf_train %>% pluck('accuracy') %>% round(3) * 100
+acc_train = perf_train %>% pluck('acc') %>% round(3) * 100
 results = bind_rows(
   tibble(y_true = y_test %>%
            apply(1, function(x){ return( which(x==1) - 1) }) %>%
@@ -136,23 +134,29 @@ results = bind_rows(
          Correct = ifelse(y_true == y_pred ,"yes", "no") %>%
            factor,
          data_type = 'train'))
-my_counts = results %>% count(y_pred, y_true, data_type)
+
+my_counts <- results %>% 
+  count(y_pred, y_true, data_type)
 
 # Visualise model performance
 # ------------------------------------------------------------------------------
-title = paste0('Performance of Deep Feed Forward Neural Network (',
+title = paste0('Performance of Neural Network for cancer class prediction based on proteome data (',
                'Total number of model parameters = ', count_params(model), ').')
-sub_title = paste0("Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ". ",
-                   "Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ".")
-xlab  = 'Predicted (Class assigned by Keras/TensorFlow deep FFN)'
-ylab  = 'Measured (Real class)'
+sub_title = paste0("Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ". ",
+                   "Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ".")
+
+# Factor the columns to get training data before test in plot
+results$data_type <- factor(results$data_type, levels=c('train','test'))
+my_counts$data_type <- factor(my_counts$data_type, levels=c('train','test'))
+
+# Plot data
 results %>%
   ggplot(aes(x = y_pred, y = y_true, fill = Correct)) +
-  geom_jitter(pch = 21, size = 4, alpha = 0.4, colour = 'black') +
+  geom_jitter(pch = 21, size = 6, alpha = 0.4) +
   geom_text(data = my_counts, aes(x = y_pred, y = y_true, label = n),
             size = 20, inherit.aes = FALSE) +
-  xlab(xlab) +
-  ylab(ylab) +
+  xlab('Predicted (Class assigned by Keras/TensorFlow deep FFN)') +
+  ylab('Measured (Real class)') +
   ggtitle(label = title, subtitle = sub_title) +
   theme_bw() +
   theme(legend.position = "bottom") +
@@ -160,7 +164,6 @@ results %>%
                      values = c('tomato','cornflowerblue')) +
   facet_wrap(~data_type, nrow = 1)
 
-# Catrine: FLip plots, so train first, then test
 # Save results
 #ggsave(filename = "results/05_ANN_performance.png",device = "png")
 
