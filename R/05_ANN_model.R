@@ -110,12 +110,11 @@ history = model %>%
 
 # Evaluate model
 # ------------------------------------------------------------------------------
-# OBS THIS ONLY WORKS IF ALL CLASSES GETS PREDICTED
-# OTHERWISE, THE FACTORING GOES WRONG.
+# All classes needs to be predicted for this to work
 perf_test = model %>% evaluate(X_test, y_test)
-acc_test = perf_test %>% pluck('accuracy') %>% round(3) * 100
+acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
 perf_train = model %>% evaluate(X_train, y_train)
-acc_train = perf_train %>% pluck('accuracy') %>% round(3) * 100
+acc_train = perf_train %>% pluck('acc') %>% round(3) * 100
 results = bind_rows(
   tibble(y_true = y_test %>%
            apply(1, function(x){ return( which(x==1) - 1) }) %>%
@@ -136,16 +135,24 @@ results = bind_rows(
          Correct = ifelse(y_true == y_pred ,"yes", "no") %>%
            factor,
          data_type = 'train'))
-my_counts = results %>% count(y_pred, y_true, data_type)
+
+my_counts = results %>% 
+  count(y_pred, y_true, data_type)
 
 # Visualise model performance
 # ------------------------------------------------------------------------------
 title = paste0('Performance of Deep Feed Forward Neural Network (',
                'Total number of model parameters = ', count_params(model), ').')
-sub_title = paste0("Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ". ",
-                   "Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ".")
+sub_title = paste0("Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ".",
+                   "Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ". ")
 xlab  = 'Predicted (Class assigned by Keras/TensorFlow deep FFN)'
 ylab  = 'Measured (Real class)'
+
+# Factor the columns to get training data before test in plot
+results$data_type <- factor(results$data_type, levels=c('train','test'))
+my_counts$data_type <- factor(my_counts$data_type, levels=c('train','test'))
+
+# Plot data
 results %>%
   ggplot(aes(x = y_pred, y = y_true, fill = Correct)) +
   geom_jitter(pch = 21, size = 4, alpha = 0.4, colour = 'black') +
@@ -158,7 +165,8 @@ results %>%
   theme(legend.position = "bottom") +
   scale_color_manual(labels = c('No', 'Yes'),
                      values = c('tomato','cornflowerblue')) +
-  facet_wrap(~data_type, nrow = 1)
+  facet_wrap(~data_type_f, nrow = 1)
+
 
 # Catrine: FLip plots, so train first, then test
 # Save results
