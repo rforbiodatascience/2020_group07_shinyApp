@@ -52,14 +52,24 @@ proteome_pca_aug <- pca %>%
   augment(proteome_data) %>%
   mutate(Class = as_factor(joined_data_aug$Class))
 
+# Get PC percent
+PC1_perc <- pca %>% 
+  tidy("pcs") %>% 
+  filter(PC==1) %>% 
+  pull(percent) 
+
+PC2_perc <- pca %>% 
+  tidy("pcs") %>% 
+  filter(PC==2) %>% 
+  pull(percent) 
 
 ### Scatter proteome data - PC1/PC2
 proteome_pca_aug %>% 
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = Class)) +
   geom_point() +
-  labs(title = "PCA - proteome data", 
-       x = "PC1",
-       y = "PC2") +
+  labs(title = "PCA plot of proteome data", 
+       x = str_c("PC1 (", round(PC1_perc*100, 2), "%)" ),
+       y = str_c("PC2 (", round(PC2_perc*100, 2), "%)")) +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = "results/04_PCA.png", device = "png")
