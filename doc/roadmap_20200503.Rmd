@@ -179,7 +179,7 @@ Exploring Clinical Dataset patterns:
 
 # Preliminary fast hand plots
 # ------------------------------------------------------------------------------
-knitr::include_graphics(path = "../results/03_EDA_grid4_combo2.png")
+#knitr::include_graphics(path = "../results/03_EDA_grid4_combo2.png")
 ```
 
 Figure: Exploratory analysis of clinical data: Mapping PAM50 tumor subtype category against other clinical data.
@@ -197,7 +197,7 @@ Figure: Boxplot of individual PAM50 groups based on differential gene expression
 ## Tissue specific expression landscape
 ### Heatmap
 ```{r Heatmap, warning=FALSE, message=FALSE,fig.align = "center"}
-knitr::include_graphics("../results/proteom_heatmap_celltype.png")
+#knitr::include_graphics("../results/proteom_heatmap_celltype.png")
 ```
 
 - Figure: Heatmap of patients' expression data of PAM50 gene set
