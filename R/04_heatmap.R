@@ -17,7 +17,7 @@ source(file = "R/99_project_functions.R")
 # Load data
 # ------------------------------------------------------------------------------
 proteome_raw_data <- read_csv(file = "data/_raw/77_cancer_proteomes_CPTAC_itraq.csv")
-clinical_raw_data <- read_csv(file = "data/_raw/77_cancer_proteomes_CPTAC_itraq.csv")
+clinical_raw_data <- read_csv(file = "data/_raw/clinical_data_breast_cancer.csv")
 
 
 # Wrangle data
