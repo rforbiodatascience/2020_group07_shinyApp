@@ -52,15 +52,15 @@ heatmap <- gene_set %>%
                        name = "ITRAQ log2 ratio") +
   theme(panel.grid = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.x = element_text(size = 9),
+        axis.text.x = element_text(size = 10),
         axis.text.y = element_blank(),
-        plot.title = element_text(size = 12),
-        legend.title = element_text(size = 7),
-        legend.text = element_text(size = 7),
+        plot.title = element_text(size = 15),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 10),
         panel.spacing.y = unit(0.1, "cm")) +
   labs(title = "Expression of common biomarkers in breast cancer across tumor classes",
        x = NULL,
-       y = NULL) 
+       y = NULL)
   
 ggsave(filename = "results/04_heatmap_specific_genes.png", device = "png")
 
