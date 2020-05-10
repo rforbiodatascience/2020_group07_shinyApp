@@ -87,7 +87,7 @@ ggsave(filename = "results/05_PCA.png",
 
 # K-means clustering
 # ------------------------------------------------------------------------------
-k = n_levels # 4 levels
+k = 4 # 4 levels
 
 ### Clustering on original data
 set.seed(12)
