@@ -16,7 +16,7 @@ The data contain 3 tables:
 * Clinical data: clinical labels for patient outcomes 
 * PAM50: Information on proteins which is significant in breast cancer
 
-The data is available in this git under data/\_raw. 
+The data is available in this git under */data/\_raw*. 
 
 The data was originally found on Kaggle:
 <https://www.kaggle.com/piotrgrabo/breastcancerproteomes>
@@ -37,7 +37,7 @@ git clone https://github.com/rforbiodatascience/2020_group07
 
 Usage
 --------------------
-To create the full data analysis the script 00.doit.R should be run. This will run all scripts and create all final plots. A presentation of the project can be found in /doc.
+To create the full data analysis the script *00.doit.R* found in */R* should be run. This will run all scripts and create all final plots. A presentation of the project can be found in */doc*.
 
 
 Group members
