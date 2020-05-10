@@ -126,8 +126,34 @@ proteome_pca_cluster_aug <-
   rename(cluster_pca = .cluster)
 
 
+# Which clustering technique performs better
+# ------------------------------------------------------------------------------
 
-# Visualization of clusters
+accuracy <- proteome_pca_cluster_aug %>%
+  
+  select(Class, cluster_original, cluster_pca) %>%
+  
+  mutate(cluster_original = case_when(cluster_original == 1 ~ "HER2",
+                                      cluster_original == 2 ~ "LumA",
+                                      cluster_original == 3 ~ "LumB",
+                                      cluster_original == 4 ~ "Basal"),
+         cluster_pca = case_when(cluster_pca == 1 ~ "LumA",
+                                 cluster_pca == 2 ~ "Basal",
+                                 cluster_pca == 3 ~ "HER2",
+                                 cluster_pca == 4 ~ "LumB"),
+         
+         cluster_original_correct = case_when(Class == cluster_original ~ 1,
+                                              Class != cluster_original ~ 0),
+         cluster_pca_correct = case_when(Class == cluster_pca ~ 1,
+                                         Class != cluster_pca ~ 0)) %>% 
+  
+  summarise(score_original = mean(cluster_original_correct) * 100,
+            score_pca = mean(cluster_pca_correct) * 100)
+
+write_csv (x = accuracy, path =  "results/04_clustering_accuracy.csv")
+
+
+# Visualization of clusters on PCs
 # ------------------------------------------------------------------------------
 ### Original classes
 plot1 <- proteome_pca_cluster_aug %>%
@@ -160,12 +186,14 @@ plot2 <- proteome_pca_cluster_aug %>%
              colour = cluster_original)) +
   geom_point() +
   labs(title = "Clusters on\noriginal data",
+       subtitle = paste0("accuracy = ", round(accuracy[[1]], 1), "%"),
        x = 'PC1',
        y = 'PC2',
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, size = 8), 
         legend.position = "bottom",
-        legend.title.align=0.5,
+        legend.title.align = 0.5,
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.1,"cm")) +
@@ -182,12 +210,14 @@ plot3 <- proteome_pca_cluster_aug %>%
              colour = cluster_pca)) +
   geom_point() +
   labs(title = "Clusters on\nPCA data",
+       subtitle = paste0("accuracy = ", round(accuracy[[2]], 1), "%"),
        x = 'PC1',
        y = 'PC2',
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, size = 8), 
         legend.position = "bottom",
-        legend.title.align=0.5,
+        legend.title.align = 0.5,
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.1,"cm")) +
@@ -199,28 +229,3 @@ ggsave(filename = "results/04_PCA_kmeans.png", device = "png",
        height = 5)
 
 
-# Which clustering technique performs better
-# ------------------------------------------------------------------------------
-
-accuracy <- proteome_pca_cluster_aug %>%
-  
-  select(Class, cluster_original, cluster_pca) %>%
-  
-  mutate(cluster_original = case_when(cluster_original == 1 ~ "HER2",
-                                 cluster_original == 2 ~ "LumA",
-                                 cluster_original == 3 ~ "LumB",
-                                 cluster_original == 4 ~ "Basal"),
-         cluster_pca = case_when(cluster_pca == 1 ~ "LumA",
-                                 cluster_pca == 2 ~ "Basal",
-                                 cluster_pca == 3 ~ "HER2",
-                                 cluster_pca == 4 ~ "LumB"),
-         
-         cluster_original_correct = case_when(Class == cluster_original ~ 1,
-                                         Class != cluster_original ~ 0),
-         cluster_pca_correct = case_when(Class == cluster_pca ~ 1,
-                                         Class != cluster_pca ~ 0)) %>% 
-  
-  summarise(score_original = mean(cluster_original_correct) * 100,
-            score_pca = mean(cluster_pca_correct) * 100)
-
-write_csv (x = accuracy, path =  "results/04_clustering_accuracy.csv")
