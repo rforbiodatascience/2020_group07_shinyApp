@@ -56,13 +56,13 @@ library("tidyverse")
 # ------------------------------------------------------------------------------
 # Load data
 # ------------------------------------------------------------------------------
-
-df <- read_csv(file = "../data/02_joined_data_aug.csv")
-
-# check the datasets in tables
-proteome_raw_data <- as_tibble(read_csv(file = "../data/_raw/77_cancer_proteomes_CPTAC_itraq.csv")) # -> rows x cols - 12,553 x 86
-clinical_raw_data <- as_tibble(read_csv(file = "../data/_raw/clinical_data_breast_cancer.csv"))  # -> rows x cols - 105 x 30
-pam50_raw_data <- as_tibble(read_csv(file = "../data/_raw/PAM50_proteins.csv"))
+# 
+# df <- read_csv(file = "../data/02_joined_data_aug.csv")
+# 
+# # check the datasets in tables
+# proteome_raw_data <- as_tibble(read_csv(file = "../data/_raw/77_cancer_proteomes_CPTAC_itraq.csv")) # -> rows x cols - 12,553 x 86
+# clinical_raw_data <- as_tibble(read_csv(file = "../data/_raw/clinical_data_breast_cancer.csv"))  # -> rows x cols - 105 x 30
+# pam50_raw_data <- as_tibble(read_csv(file = "../data/_raw/PAM50_proteins.csv"))
 ```
 
 
@@ -70,6 +70,7 @@ pam50_raw_data <- as_tibble(read_csv(file = "../data/_raw/PAM50_proteins.csv"))
 ## Introduction {data-background="Rmd_sup/breast.jpg" data-background-size=cover}
 ### Dataset:
 * breast cancer
+
 * proteomics by mass spectrometry
 
 ### Goal:
@@ -121,6 +122,12 @@ knitr::include_graphics("../results/03_EDA_age_distribution.png")
 
 ```{r,  out.width =  "770px"}
 knitr::include_graphics("../results/03_EDA_gender_vs_tumortype.png")
+```
+
+## Heatmap
+
+```{r}
+knitr::include_graphics("../results/04_heatmap_specific_genes.png")
 ```
 
 ## Dimentionality reduction 
