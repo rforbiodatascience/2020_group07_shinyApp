@@ -168,4 +168,5 @@ results %>%
   facet_wrap(~data_type, nrow = 1)
 
 # Save results
-ggsave(filename = "results/06_ANN_performance.png", device = "png")
+ggsave(filename = "results/06_ANN_performance.png", 
+       device = "png")
