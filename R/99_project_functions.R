@@ -1,22 +1,20 @@
-# Load libraries
+# DEFINE PROJECT FUNCTIONS
 # ------------------------------------------------------------------------------
 
-if (!requireNamespace("docstring", quietly = TRUE))
-  install.packages("docstring")
-library(docstring)
 
-# Define project functions
+# Tibble to matrix
 # ------------------------------------------------------------------------------
+# Credit: https://rdrr.io/github/HuntsmanCancerInstitute/hciR/man/as_matrix.html
 as_matrix <- function(x){
   if(!tibble::is_tibble(x) ) stop("x must be a tibble")
   y <- as.matrix.data.frame(x[,-1])
   rownames(y) <- x[[1]]
   y
 }
-# Credit: https://rdrr.io/github/HuntsmanCancerInstitute/hciR/man/as_matrix.html
-# ------------------------------------------------------------------------------
+
+
 # Extract the plot's legend
-library(gridExtra)
+# ------------------------------------------------------------------------------
 get_legend <- function(myggplot){
   #' Returns the "legend" object from a plot object:
   #' 
@@ -27,78 +25,9 @@ get_legend <- function(myggplot){
   return(legend)
 }
 
-# Wrap for `?function_name``
-#docstring(get_legend)
 
-### Catrine: this makes the helpy thing show up everytime you 
-### load this script.
-
-# Extract top genes from Class grouped data:
-# takes the filterby as astring, a new label for the column and a number of genes to return
+# Customized boxplot
 # ------------------------------------------------------------------------------
-# Data split for each cancer group: without CONTROL samples
-return_top_genes <- function(data, filter_by, new_label, n = 10){
-  #' Data wrangling helper function:
-  #' 
-  #' Returns the top n differentially expressed genes for a subset of data
-  #' 
-  #' @param filter_by specifying the subset string for filter()
-  #' @param new_label specify the new column name in the final tible
-  #' @param n the number of top expressed genes
-  data <- data %>% 
-    select(patient_ID, Class, starts_with("NP_")) %>%
-    filter(Class == filter_by) %>%
-    pivot_longer(data = ., 
-                 cols = -c(Class, patient_ID)) %>% 
-    pivot_wider(data = ., 
-                values_from = value, 
-                names_from = patient_ID) %>%
-    mutate(avg = rowMeans(select(.,-Class,-name),
-                          na.rm = TRUE)) %>%
-    mutate(avg = abs(avg)) %>%
-    arrange(desc(avg)) %>%
-    select(name) %>%
-    rename(., new_label = name) %>%
-    slice(.,1:n)
-  return(data)
-}
-
-# Wrap for `?function_name``
-#docstring(return_top_genes)
-
-### Catrine: this makes the helpy thing show up everytime you 
-### load this script.
-
-
-# ------------------------------------------------------------------------------
-# Function: Use the data splits based on PAM50 subtype to generate plots iteratively
-plotting_PAM50_density <- function (data) {
-  subset <- data %>% select(Class) %>% unique(.)
-  title <- paste0(subset," tissue: Density")
-  file_prefex <- "results/03_EDA_tissue_"
-  file_suffix <- "_density.png"
-  data %>%   select(patient_ID,
-                    starts_with("NP_"),
-                    Class) %>%
-    pivot_longer(cols = starts_with('NP_')) %>%
-    ggplot(aes(x = value, 
-               fill = patient_ID)
-           ) + 
-    geom_density(alpha=0.5) + 
-    geom_vline(xintercept = c(-1, 1), linetype="dashed") + 
-    ggtitle(title) +
-    theme_bw(base_family = "Times", 
-             base_size = 10) +
-    theme(legend.position = "none") +
-    labs(x = "Log2 Expression",
-         y = "Density")
-  ggsave( filename = paste0(file_prefex, subset,file_suffix),
-          device = "png")
-}
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-# ggplot function for handling a single instance
-# This one would add the reference line legend
 plotting_boxplot <- function(data, subset_term, color, 
                              control_range = control_range, 
                              control_range_colour = "yellow1") {
@@ -127,8 +56,7 @@ plotting_boxplot <- function(data, subset_term, color,
                size=1) +
     scale_color_manual(name = "Inter Quartile Range:", 
                        values = c('Control samples' = "black", 
-                                  'Lower Bound' = "grey12")
-                      ) +
+                                  'Lower Bound' = "grey12")) +
     stat_summary(fun = "median", 
                  geom = "point", 
                  colour = "white", 
@@ -139,8 +67,7 @@ plotting_boxplot <- function(data, subset_term, color,
     theme(legend.position = "bottom",
           axis.text.y = element_blank(),
           plot.title = element_text(hjust = 0.5,
-                                    size = 20)
-          ) +
+                                    size = 20)) +
     annotate("rect", 
              xmin= control_range[1], xmax=control_range[2], # supply from data
              ymin=-Inf, ymax=Inf,
@@ -148,24 +75,13 @@ plotting_boxplot <- function(data, subset_term, color,
   return(plot)
 }
 
-# ------------------------------------------------------------------------------
 
 
-
-# # Diverging Barcharts
-# joined_data_aug %>%
-#   select(patient_ID,
-#          starts_with("NP_"),
-#          Class) %>%
-#   subset(Class == subset_term) %>%
-#   pivot_longer(cols = starts_with('NP_')) %>%
-
-
-# ------------------------------------------------------------------------------
 # Set up the plot's theme to be consistent across all plots
-myplot_aes <-   theme_bw(base_family = "Times", 
-                         base_size = 18) +
-                theme(plot.title = element_text(hjust = 0.5, 
-                                                 size = 25),
-                      legend.position = "bottom")
 # ------------------------------------------------------------------------------
+myplot_aes <- theme_bw(base_family = "Times", 
+                         base_size = 18) +
+              theme(plot.title = element_text(hjust = 0.5, 
+                                              size = 25),
+                    legend.position = "bottom")
+
