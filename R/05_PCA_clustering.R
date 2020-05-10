@@ -29,21 +29,6 @@ proteome_data <- joined_data_aug %>%
   select(starts_with("NP"))            
 
 
-# Custom colors
-# ---------------------------------------------------------------------------
-n_levels <- joined_data_aug %>% 
-  select(Class) %>% 
-  n_distinct
-
-custom_colors <- brewer.pal(n_levels, "Set1")
-
-names(custom_colors) <- joined_data_aug %>% 
-  count(Class) %>% 
-  select(Class) %>% 
-  pull()
-
-
-
 # PCA 
 # ---------------------------------------------------------------------------
 ## Compute PCA
@@ -92,7 +77,6 @@ proteome_pca_aug %>%
        y = str_c("PC2 (", round(PC2_perc * 100, 2), "%)")) +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  scale_fill_manual(values = custom_colors) +
   myplot_aes
 
 ggsave(filename = "results/05_PCA.png", 
@@ -173,7 +157,6 @@ plot1 <- proteome_pca_cluster_aug %>%
         legend.title = element_text (size = 14),
         legend.text = element_text (size = 10),
         legend.key.size = unit (0.1, "cm")) +
-  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend( title.position = "top",
                                 nrow = 2,
                                 byrow = TRUE)) + myplot_aes
@@ -199,7 +182,6 @@ plot2 <- proteome_pca_cluster_aug %>%
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
-  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend(title.position="top")) + myplot_aes
 
 
@@ -222,7 +204,6 @@ plot3 <- proteome_pca_cluster_aug %>%
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
-  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend(title.position="top")) + myplot_aes
 
 (plot1 + plot2 + plot3) 
