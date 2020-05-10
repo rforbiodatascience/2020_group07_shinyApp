@@ -7,6 +7,8 @@ rm(list = ls())
 library(tidyverse)
 library(broom)
 library(patchwork)
+library(RColorBrewer)
+
 
 # Define functions
 # ------------------------------------------------------------------------------
@@ -27,13 +29,28 @@ proteome_data <- joined_data_aug %>%
   select(starts_with("NP"))            
 
 
+# Custom colors
+# ---------------------------------------------------------------------------
+n_levels <- joined_data_aug %>% 
+  select(Class) %>% 
+  n_distinct
+
+custom_colors <- brewer.pal(n_levels, "Set1")
+
+names(custom_colors) <- joined_data_aug %>% 
+  count(Class) %>% 
+  select(Class) %>% 
+  pull()
+
+  
+
 # PCA 
 # ---------------------------------------------------------------------------
-### Compute PCA
+## Compute PCA
 pca <- proteome_data %>% 
   prcomp(center = TRUE, scale = TRUE) 
 
-### Scree plot
+## Scree plot
 pca %>%
   tidy("pcs") %>% 
   ggplot(aes(x = PC, y = percent)) +
@@ -41,18 +58,20 @@ pca %>%
   labs(title = "Scree plot - PCA proteome data", 
        x = "Principal components",
        y = "variance explained (%)") +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(base_size = 18,
+        plot.title = element_text(hjust = 1.5, size = 25)) +
   theme_bw() +
   scale_y_continuous(labels = scales::percent)
 
 ggsave(filename = "results/04_scree_plot.png", device = "png")
 
-### Augment and add y class
+
+## Augment and add y class
 proteome_pca_aug <- pca %>%
   augment(proteome_data) %>%
-  mutate(Class = as_factor(joined_data_aug$Class))
+  mutate(Class = factor(joined_data_aug$Class, levels = c("Basal", "HER2", "LumA", "LumB")))
 
-# Get PC percent
+## Get PC percent
 PC1_perc <- pca %>% 
   tidy("pcs") %>% 
   filter(PC==1) %>% 
@@ -63,22 +82,23 @@ PC2_perc <- pca %>%
   filter(PC==2) %>% 
   pull(percent) 
 
-### Scatter proteome data - PC1/PC2
+## Scatter proteome data - PC1/PC2
 proteome_pca_aug %>% 
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = Class)) +
   geom_point() +
   labs(title = "PCA plot of proteome data", 
-       x = str_c("PC1 (", round(PC1_perc*100, 2), "%)" ),
-       y = str_c("PC2 (", round(PC2_perc*100, 2), "%)")) +
+       x = str_c("PC1 (", round(PC1_perc * 100, 2), "%)" ),
+       y = str_c("PC2 (", round(PC2_perc * 100, 2), "%)")) +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = custom_colors)
 ggsave(filename = "results/04_PCA.png", device = "png")
 
 
 
 # K-means clustering
 # ------------------------------------------------------------------------------
-k = length(levels(proteome_pca_aug$Class)) # 4 levels
+k = n_levels # 4 levels
 
 ### Clustering on original data
 set.seed(12)
@@ -123,6 +143,7 @@ plot1 <- proteome_pca_cluster_aug %>%
         legend.title = element_text (size = 10),
         legend.text = element_text (size = 8),
         legend.key.size = unit (0.1, "cm")) +
+  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend( title.position = "top",
                                 nrow = 2,
                                 byrow = TRUE))
@@ -142,11 +163,11 @@ plot2 <- proteome_pca_cluster_aug %>%
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
         legend.position = "bottom",
-        #legend.box = "horizontal",
         legend.title.align=0.5,
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.1,"cm")) +
+  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend(title.position="top")
   )
 
@@ -168,6 +189,7 @@ plot3 <- proteome_pca_cluster_aug %>%
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
         legend.key.size = unit(0.1,"cm")) +
+  scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend(title.position="top"))
 
 (plot1 + plot2 + plot3)
@@ -178,7 +200,7 @@ ggsave(filename = "results/04_PCA_kmeans.png",
 # Which clustering technique performs better
 # ------------------------------------------------------------------------------
 
-proteome_pca_cluster_aug %>%
+accuracy <- proteome_pca_cluster_aug %>%
   
   select(Class, cluster_original, cluster_pca) %>%
   
@@ -198,7 +220,10 @@ proteome_pca_cluster_aug %>%
   
   summarise(score_original = mean(cluster_original_correct) * 100,
             score_pca = mean(cluster_pca_correct) * 100)
-# save the tibble!
+
+write_csv (x = accuracy, 
+           path =  "results/04_clustering_accuracy.csv")
+
 # score_original score_pca
 #         <dbl>     <dbl>
 #         62.3      68.8

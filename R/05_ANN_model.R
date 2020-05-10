@@ -33,24 +33,24 @@ joined_data_prep <- joined_data_aug  %>%
   select(patient_ID, starts_with("NP"), data_type, Class_num) 
 
 # Define training and test feature matrices
-X_train = joined_data_prep %>%
+X_train <- joined_data_prep %>%
   filter(data_type > 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
          
-X_test = joined_data_prep %>%
+X_test <- joined_data_prep %>%
   filter(data_type <= 3) %>%
   select(patient_ID, starts_with("NP")) %>%
   as_matrix()
   
 
 # Define known target classes for training and test data
-y_train = joined_data_prep %>%
+y_train <- joined_data_prep %>%
   filter(data_type > 3 ) %>%
   pull(Class_num) %>% 
   to_categorical
 
-y_test = joined_data_prep %>%
+y_test <- joined_data_prep %>%
   filter(data_type <= 3 ) %>%
   pull(Class_num) %>% 
   to_categorical
@@ -60,27 +60,27 @@ y_test = joined_data_prep %>%
 # ------------------------------------------------------------------------------
 
 # Set hyperparameters
-n_hidden_1 = 40
-h1_activate = 'relu'
-drop_out_1 = 0.4
-n_hidden_2 = 30
-h2_activate = 'relu'
-drop_out_2 = 0.3
-n_hidden_3 = 40
-h3_activate = 'relu'
-drop_out_3 = 0.2
-n_hidden_4 = 30
-h4_activate = 'relu'
-drop_out_4 = 0.1
-n_output   = 4
-o_ativate  = 'softmax'
-n_epochs = 100
-batch_size = 50
-loss_func = 'categorical_crossentropy'
-learn_rate = 0.001
+n_hidden_1 <- 40
+h1_activate <- 'relu'
+drop_out_1 <- 0.4
+n_hidden_2 <- 30
+h2_activate <- 'relu'
+drop_out_2 <- 0.3
+n_hidden_3 <- 40
+h3_activate <- 'relu'
+drop_out_3 <- 0.2
+n_hidden_4 <- 30
+h4_activate <- 'relu'
+drop_out_4 <- 0.1
+n_output   <- 4
+o_ativate  <- 'softmax'
+n_epochs <- 100
+batch_size <- 50
+loss_func <- 'categorical_crossentropy'
+learn_rate <- 0.001
 
 # Set architecture
-model = keras_model_sequential() %>% 
+model <- keras_model_sequential() %>% 
   layer_dense(units = n_hidden_1, activation = h1_activate, input_shape = 40) %>% 
   layer_dropout(rate = drop_out_1) %>% 
   layer_dense(units = n_hidden_2, activation = h2_activate) %>%
@@ -100,7 +100,7 @@ model %>%
 
 # Train model
 # ------------------------------------------------------------------------------
-history = model %>%
+history <- model %>%
   fit(x = X_train,
       y = y_train,
       epochs = n_epochs,
@@ -110,11 +110,17 @@ history = model %>%
 # Evaluate model
 # ------------------------------------------------------------------------------
 # All classes needs to be predicted for the factoring to work
-perf_test = model %>% evaluate(X_test, y_test)
-acc_test = perf_test %>% pluck('acc') %>% round(3) * 100
-perf_train = model %>% evaluate(X_train, y_train)
-acc_train = perf_train %>% pluck('acc') %>% round(3) * 100
-results = bind_rows(
+perf_test <- model %>%
+  evaluate(X_test, y_test)
+acc_test <- perf_test %>%
+  pluck('acc') %>%
+  round(3) * 100
+perf_train <- model %>% 
+  evaluate(X_train, y_train)
+acc_train <- perf_train %>%
+  pluck('acc') %>%
+  round(3) * 100
+results <- bind_rows(
   tibble(y_true = y_test %>%
            apply(1, function(x){ return( which(x==1) - 1) }) %>%
            factor,
@@ -140,14 +146,14 @@ my_counts <- results %>%
 
 # Visualise model performance
 # ------------------------------------------------------------------------------
-title = paste0('Performance of Neural Network for cancer class prediction based on proteome data (',
+title <- paste0('Performance of Neural Network for cancer class prediction based on proteome data (',
                'Total number of model parameters = ', count_params(model), ').')
-sub_title = paste0("Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ". ",
+sub_title <- paste0("Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ". ",
                    "Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ".")
 
 # Factor the columns to get training data before test in plot
-results$data_type <- factor(results$data_type, levels=c('train','test'))
-my_counts$data_type <- factor(my_counts$data_type, levels=c('train','test'))
+results$data_type <- factor(results$data_type, levels = c('train','test'))
+my_counts$data_type <- factor(my_counts$data_type, levels = c('train','test'))
 
 # Plot data
 results %>%
