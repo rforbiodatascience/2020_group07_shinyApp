@@ -27,8 +27,8 @@ control_range <- joined_data_full_aug %>%
   select(patient_ID, starts_with("NP_")) %>%
   pivot_longer(cols = -patient_ID) %>% 
   group_by(patient_ID) %>% 
-  summarise(lower = quantile(value,0.25), 
-            upper = quantile(value,0.75)) %>% 
+  summarise(lower = quantile(value, 0.25), 
+            upper = quantile(value, 0.75)) %>% 
   summarise(min = min(lower), 
             max = max(upper)) %>%
   unlist()
