@@ -42,7 +42,7 @@ names(custom_colors) <- joined_data_aug %>%
   select(Class) %>% 
   pull()
 
-  
+
 
 # PCA 
 # ---------------------------------------------------------------------------
@@ -55,16 +55,16 @@ pca %>%
   tidy("pcs") %>% 
   ggplot(aes(x = PC, y = percent)) +
   geom_col() +
-  labs(title = "Scree plot - PCA proteome data", 
+  labs(title = "Scree plot: PCA proteome data", 
        x = "Principal components",
        y = "variance explained (%)") +
   theme(base_size = 18,
         plot.title = element_text(hjust = 1.5, size = 25)) +
   theme_bw() +
-  scale_y_continuous(labels = scales::percent)
+  scale_y_continuous(labels = scales::percent) + myplot_aes
 
 ggsave(filename = "results/04_scree_plot.png", device = "png",
-       height = 6)
+       height = 5)
 
 
 ## Augment and add y class
@@ -86,15 +86,18 @@ PC2_perc <- pca %>%
 ## Scatter proteome data - PC1/PC2
 proteome_pca_aug %>% 
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = Class)) +
-  geom_point() +
+  geom_point(size = 3) +
   labs(title = "PCA plot of proteome data", 
        x = str_c("PC1 (", round(PC1_perc * 100, 2), "%)" ),
        y = str_c("PC2 (", round(PC2_perc * 100, 2), "%)")) +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  scale_fill_manual(values = custom_colors)
-ggsave(filename = "results/04_PCA.png", device = "png",
-       height = 6)
+  scale_fill_manual(values = custom_colors) +
+  myplot_aes
+
+ggsave(filename = "results/04_PCA.png", 
+       device = "png",
+       height = 5)
 
 
 
@@ -159,22 +162,22 @@ plot1 <- proteome_pca_cluster_aug %>%
   ggplot(aes(x = .fittedPC1, 
              y = .fittedPC2, 
              colour = Class)) +
-  geom_point() +
+  geom_point(size=3) +
   labs(title = "Original data",
        x = 'PC1',
        y = 'PC2',
-       colour = "real class") +
+       colour = "True class") +
   theme(plot.title = element_text(hjust = 0.5),
         legend.position = "bottom",
         legend.title.align = 0.5,
-        legend.title = element_text (size = 10),
-        legend.text = element_text (size = 8),
+        legend.title = element_text (size = 14),
+        legend.text = element_text (size = 10),
         legend.key.size = unit (0.1, "cm")) +
   scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend( title.position = "top",
                                 nrow = 2,
-                                byrow = TRUE))
-  
+                                byrow = TRUE)) + myplot_aes
+
 
 
 
@@ -183,8 +186,8 @@ plot2 <- proteome_pca_cluster_aug %>%
   ggplot(aes(x = .fittedPC1, 
              y = .fittedPC2,
              colour = cluster_original)) +
-  geom_point() +
-  labs(title = "Clusters on\noriginal data",
+  geom_point(size=3) +
+  labs(title = "Clusters on original data",
        subtitle = paste0("accuracy = ", round(accuracy[[1]], 1), "%"),
        x = 'PC1',
        y = 'PC2',
@@ -193,12 +196,11 @@ plot2 <- proteome_pca_cluster_aug %>%
         plot.subtitle = element_text(hjust = 0.5, size = 10), 
         legend.position = "bottom",
         legend.title.align = 0.5,
-        legend.title = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
   scale_fill_manual(values = custom_colors) +
-  guides(colour = guide_legend(title.position="top")
-  )
+  guides(colour = guide_legend(title.position="top")) + myplot_aes
 
 
 
@@ -207,8 +209,8 @@ plot3 <- proteome_pca_cluster_aug %>%
   ggplot(aes(x = .fittedPC1, 
              y = .fittedPC2, 
              colour = cluster_pca)) +
-  geom_point() +
-  labs(title = "Clusters on\nPCA data",
+  geom_point(size=3) +
+  labs(title = "Clusters on PCA data",
        subtitle = paste0("accuracy = ", round(accuracy[[2]], 1), "%"),
        x = 'PC1',
        y = 'PC2',
@@ -217,13 +219,14 @@ plot3 <- proteome_pca_cluster_aug %>%
         plot.subtitle = element_text(hjust = 0.5, size = 10), 
         legend.position = "bottom",
         legend.title.align = 0.5,
-        legend.title = element_text(size = 10),
-        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
   scale_fill_manual(values = custom_colors) +
-  guides(colour = guide_legend(title.position="top"))
+  guides(colour = guide_legend(title.position="top")) + myplot_aes
 
 (plot1 + plot2 + plot3) 
+
 ggsave(filename = "results/04_PCA_kmeans.png", device = "png",
        height = 5)
 

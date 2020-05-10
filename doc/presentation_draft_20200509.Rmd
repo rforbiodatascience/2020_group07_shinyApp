@@ -143,7 +143,7 @@ knitr::include_graphics("../results/04_PCA_kmeans.png")
 
 ## ANN model's representation 
 
-```{r,out.width = "1025px"}
+```{r,out.width = "900px"}
 knitr::include_graphics("../doc/Rmd_sup/ANN_structure.png")
 ```
 
