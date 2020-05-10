@@ -62,6 +62,6 @@ heatmap <- gene_set %>%
        x = NULL,
        y = NULL)
   
-ggsave(filename = "results/04_heatmap_specific_genes.png", 
+ggsave(filename = "results/04_heatmap.png", 
        device = "png")
 
