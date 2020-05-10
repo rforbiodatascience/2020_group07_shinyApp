@@ -30,7 +30,8 @@ clinical_data_aug <- clinical_data_clean %>%
                              pattern = "Basal-like",
                              replacement = "Basal")) %>%
   # Transform class to factor
-  mutate(Class = factor(Class, levels = c("Basal", "HER2", "LumA", "LumB", "Control")))
+  mutate(Class = factor(Class, 
+                        levels = c("Basal", "HER2", "LumA", "LumB", "Control")))
 
 
 ## Handle NA values in proteome data
@@ -54,14 +55,19 @@ proteome_data_PAM50_aug <- proteome_data_aug %>%
 
 ## Join clinical and proteome data (full version)
 joined_data_full_aug <- proteome_data_aug %>%
-  right_join(clinical_data_aug, ., by = "patient_ID") %>% 
+  right_join(clinical_data_aug, 
+             ., 
+             by = "patient_ID") %>% 
   # Add control labels
-  mutate(Class = replace_na(Class, "Control"))
+  mutate(Class = replace_na(Class, 
+                            replace = "Control"))
 
 
 ## Join clinical and proteome data (PAM50genes filtered version)
 joined_data_PAM50_aug <- proteome_data_PAM50_aug %>%
-  right_join(clinical_data_aug, ., by = "patient_ID")  %>% 
+  right_join(clinical_data_aug, 
+             ., 
+             by = "patient_ID")  %>% 
   # Add control labels
   mutate(Class = replace_na(Class, "Control")) %>% 
   mutate(Class = factor(Class, levels = c("Basal", "HER2", "LumA", "LumB", "Control")))
