@@ -17,8 +17,7 @@ PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
 # Rename Class groups in clinical data
 clinical_data_aug <- clinical_data_clean %>% 
   rename(Class = PAM50_mRNA ) %>% 
-  mutate(Class = replace_na(Class, "Control"),
-         Class = str_replace(Class,
+  mutate(Class = str_replace(Class,
                              pattern = "HER2-enriched",
                              replacement = "HER2"),
          Class = str_replace(Class,
@@ -55,12 +54,16 @@ proteome_data_PAM50_aug <- proteome_data_aug %>%
 
 ## Join clinical and proteome data (full version)
 joined_data_full_aug <- proteome_data_aug %>%
-  right_join(clinical_data_aug, ., by = "patient_ID")
+  right_join(clinical_data_aug, ., by = "patient_ID") %>% 
+  # Add control labels
+  mutate(Class = replace_na(Class, "Control"))
 
 
 ## Join clinical and proteome data (PAM50genes filtered version)
 joined_data_PAM50_aug <- proteome_data_PAM50_aug %>%
-  right_join(clinical_data_aug, ., by = "patient_ID")
+  right_join(clinical_data_aug, ., by = "patient_ID")  %>% 
+  # Add control labels
+  mutate(Class = replace_na(Class, "Control"))
 
 
 # Write data
