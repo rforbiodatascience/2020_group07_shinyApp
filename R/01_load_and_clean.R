@@ -43,8 +43,8 @@ proteome_data_clean <- proteome_data %>%
   # Remove replicate columns
   select(-replicates) %>% 
   # Remove non-PAM50 proteins
-  semi_join(PAM50_clean, 
-            by = "RefSeq_accession_number") %>%
+  #semi_join(PAM50_clean, 
+  #          by = "RefSeq_accession_number") %>%
   # Simplify ID name
   rename_all(funs(stringr::str_replace_all(., 
                                            pattern = '\\..*', 

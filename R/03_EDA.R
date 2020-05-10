@@ -18,7 +18,7 @@ source(file = "R/99_project_functions.R")
 # ------------------------------------------------------------------------------
 #clincal_data_aug <- read_csv(file = "data/01_clinical_data_clean.csv")
 #PAM50_clean <- read_csv(file = "data/01_PAM50_clean.csv")
-joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
+joined_data_aug <- read_csv(file = "data/02_joined_data_PAM50_aug.csv")
 
 
 # Wrangle data

@@ -16,7 +16,7 @@ source(file = "R/99_project_functions.R")
 
 # Load data
 # ------------------------------------------------------------------------------
-joined_data_aug <- read_csv(file = "data/02_joined_data_aug.csv")
+joined_data_aug <- read_csv(file = "data/02_joined_data_PAM50_aug.csv")
 
 # Wrangle data
 # ------------------------------------------------------------------------------
