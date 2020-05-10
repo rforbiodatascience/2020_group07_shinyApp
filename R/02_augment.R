@@ -63,7 +63,8 @@ joined_data_full_aug <- proteome_data_aug %>%
 joined_data_PAM50_aug <- proteome_data_PAM50_aug %>%
   right_join(clinical_data_aug, ., by = "patient_ID")  %>% 
   # Add control labels
-  mutate(Class = replace_na(Class, "Control"))
+  mutate(Class = replace_na(Class, "Control")) %>% 
+  mutate(Class = factor(Class, levels = c("Basal", "HER2", "LumA", "LumB", "Control")))
 
 
 # Write data
