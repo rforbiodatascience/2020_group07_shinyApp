@@ -64,7 +64,7 @@ pca %>%
   scale_y_continuous(labels = scales::percent)
 
 ggsave(filename = "results/04_scree_plot.png", device = "png",
-       height = 5)
+       height = 6)
 
 
 ## Augment and add y class
@@ -94,7 +94,7 @@ proteome_pca_aug %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = custom_colors)
 ggsave(filename = "results/04_PCA.png", device = "png",
-       height = 5)
+       height = 6)
 
 
 
@@ -150,7 +150,6 @@ accuracy <- proteome_pca_cluster_aug %>%
   summarise(score_original = mean(cluster_original_correct) * 100,
             score_pca = mean(cluster_pca_correct) * 100)
 
-write_csv (x = accuracy, path =  "results/04_clustering_accuracy.csv")
 
 
 # Visualization of clusters on PCs
@@ -191,7 +190,7 @@ plot2 <- proteome_pca_cluster_aug %>%
        y = 'PC2',
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5, size = 8), 
+        plot.subtitle = element_text(hjust = 0.5, size = 10), 
         legend.position = "bottom",
         legend.title.align = 0.5,
         legend.title = element_text(size = 10),
@@ -215,7 +214,7 @@ plot3 <- proteome_pca_cluster_aug %>%
        y = 'PC2',
        colour = "clusters") +
   theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5, size = 8), 
+        plot.subtitle = element_text(hjust = 0.5, size = 10), 
         legend.position = "bottom",
         legend.title.align = 0.5,
         legend.title = element_text(size = 10),
