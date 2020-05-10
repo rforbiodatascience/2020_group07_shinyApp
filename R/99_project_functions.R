@@ -119,14 +119,14 @@ plotting_boxplot <- function(data, subset_term, color,
          title = subset_term) +
     xlim(-10,10) +
     geom_vline(aes(xintercept=control_range[2],
-                   color="Range"), 
+                   color="Control samples"), 
                linetype="solid",
                size=1) +
     geom_vline(aes(xintercept=control_range[1]), 
                linetype="solid",
                size=1) +
-    scale_color_manual(name = "Control samples:", 
-                       values = c('Range' = "black", 
+    scale_color_manual(name = "Inter Quartile Range:", 
+                       values = c('Control samples' = "black", 
                                   'Lower Bound' = "grey12")
                       ) +
     stat_summary(fun = "median", 
