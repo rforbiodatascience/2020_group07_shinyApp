@@ -58,7 +58,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                 size = 25)) 
 
-ggsave(filename = "results/03_EDA_age_distribution.png", device = "png")
+ggsave(filename = "results/03_EDA_age_distribution.png", 
+       device = "png",
+       height = 5)
 
 
 # Plot: COME BACK TO IT
@@ -77,7 +79,9 @@ joined_data_aug %>%
        x = 'AJJC stage',
        y = 'Age at initial diagnosis')
 
-ggsave(filename = "results/03_EDA_age_cancer_severity.png",device = "png")
+ggsave(filename = "results/03_EDA_age_cancer_severity.png",
+       device = "png",
+       height = 5)
 
 
 # Plot: Gender distribution 
@@ -92,7 +96,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 14))
 
-ggsave(filename = "results/03_EDA_gender_vs_tumortype.png", device = "png")   
+ggsave(filename = "results/03_EDA_gender_vs_tumortype.png",
+       device = "png",
+       height = 5)   
 
 # Plot: Class distribution across patients: REORDER THE BARS
 # ------------------------------------------------------------------------------
@@ -107,7 +113,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 14))
 
-ggsave(filename = "results/03_EDA_class_distribution.png", device = "png")    
+ggsave(filename = "results/03_EDA_class_distribution.png",
+       device = "png",
+       height = 5)    
 
 
 # HEATMAP MATRIX
@@ -228,8 +236,7 @@ plot_TvsPAM50_boxplot <- joined_data_aug %>%
   ) 
 
 ggsave(plot = plot_TvsPAM50_boxplot, filename = "results/03_EDA_boxplot_T_vs_PAM50_mapping.png",
-       device = "png",
-)
+       device = "png")
 
 # TEST for violins
 p1_boxplot <- plotting_violinplot(data = joined_data_aug, subset_term = "Basal", color = "red")

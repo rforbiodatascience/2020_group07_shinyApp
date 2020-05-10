@@ -63,7 +63,8 @@ pca %>%
   theme_bw() +
   scale_y_continuous(labels = scales::percent)
 
-ggsave(filename = "results/04_scree_plot.png", device = "png")
+ggsave(filename = "results/04_scree_plot.png", device = "png",
+       height = 5)
 
 
 ## Augment and add y class
@@ -92,7 +93,8 @@ proteome_pca_aug %>%
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = custom_colors)
-ggsave(filename = "results/04_PCA.png", device = "png")
+ggsave(filename = "results/04_PCA.png", device = "png",
+       height = 5)
 
 
 
@@ -192,9 +194,9 @@ plot3 <- proteome_pca_cluster_aug %>%
   scale_fill_manual(values = custom_colors) +
   guides(colour = guide_legend(title.position="top"))
 
-(plot1 + plot2 + plot3)
-ggsave(filename = "results/04_PCA_kmeans.png",
-       device = "png")
+(plot1 + plot2 + plot3) 
+ggsave(filename = "results/04_PCA_kmeans.png", device = "png",
+       height = 5)
 
 
 # Which clustering technique performs better
@@ -205,11 +207,11 @@ accuracy <- proteome_pca_cluster_aug %>%
   select(Class, cluster_original, cluster_pca) %>%
   
   mutate(cluster_original = case_when(cluster_original == 1 ~ "HER2",
-                                 cluster_original == 2 ~ "Basal",
+                                 cluster_original == 2 ~ "LumA",
                                  cluster_original == 3 ~ "LumB",
-                                 cluster_original == 4 ~ "LumA"),
-         cluster_pca = case_when(cluster_pca == 1 ~ "Basal",
-                                 cluster_pca == 2 ~ "LumA",
+                                 cluster_original == 4 ~ "Basal"),
+         cluster_pca = case_when(cluster_pca == 1 ~ "LumA",
+                                 cluster_pca == 2 ~ "Basal",
                                  cluster_pca == 3 ~ "HER2",
                                  cluster_pca == 4 ~ "LumB"),
          
@@ -221,9 +223,4 @@ accuracy <- proteome_pca_cluster_aug %>%
   summarise(score_original = mean(cluster_original_correct) * 100,
             score_pca = mean(cluster_pca_correct) * 100)
 
-write_csv (x = accuracy, 
-           path =  "results/04_clustering_accuracy.csv")
-
-# score_original score_pca
-#         <dbl>     <dbl>
-#         62.3      68.8
+write_csv (x = accuracy, path =  "results/04_clustering_accuracy.csv")
