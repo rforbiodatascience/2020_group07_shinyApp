@@ -1,4 +1,4 @@
-2020\_group07
+2020\_group07: Breast cancer analysis
 ====================
 
 Description
@@ -20,6 +20,24 @@ The data is available in this git under data/\_raw.
 
 The data was originally found on Kaggle:
 <https://www.kaggle.com/piotrgrabo/breastcancerproteomes>
+
+
+Software requirements
+--------------------
+- [R](https://cran.r-project.org/bin/windows/base/)
+
+
+Installation
+--------------------
+The following code download this data analysis pipeline, when run in the terminal:
+
+```
+git clone https://github.com/rforbiodatascience/2020_group07
+```
+
+Usage
+--------------------
+To create the full data analysis the script 00.doit.R should be run. This will run all scripts and create all final plots. A presentation of the project can be found in /doc.
 
 
 Group members
