@@ -22,20 +22,20 @@ data <- read_csv(file = "data/02_joined_data_full_aug.csv")
 # ------------------------------------------------------------------------------
 ### Create long data for heatmap
 gene_set <- data %>% 
-  # keep only relevant columns for heatmap
+  # Keep only relevant columns for heatmap
   select(patient_ID, Class, NP_000537, NP_006209, NP_001002295, NP_000116, NP_000917, NP_004439) %>% 
-  # give gene names to RefSeq numbers
+  # Give gene names to RefSeq numbers
   rename("TP53" = "NP_000537",
          "PIK3CA" = "NP_006209",
          "GATA3" = "NP_001002295",
          "ESR1" = "NP_000116",
          "PGR" = "NP_000917",
          "ERBB2" = "NP_004439") %>% 
-  # create long data for heatmap
+  # Create long data for heatmap
   pivot_longer(cols = c("TP53", "PIK3CA", "GATA3", "ESR1", "PGR", "ERBB2"), 
                names_to = "RefSeq",
                values_to = "ITRAQ_log2_ratio") %>% 
-  # set factors and levels fot the plot
+  # Set factors and levels fot the plot
   mutate(Class = factor(Class, levels = c("Basal", "HER2", "LumA", "LumB", "Control"))) %>% 
   mutate(RefSeq = factor(RefSeq, levels = c("TP53", "PIK3CA", "GATA3", "ESR1", "PGR", "ERBB2")))
 
@@ -62,5 +62,6 @@ heatmap <- gene_set %>%
        x = NULL,
        y = NULL)
   
-ggsave(filename = "results/04_heatmap_specific_genes.png", device = "png")
+ggsave(filename = "results/04_heatmap_specific_genes.png", 
+       device = "png")
 
