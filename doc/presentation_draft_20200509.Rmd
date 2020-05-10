@@ -126,38 +126,38 @@ knitr::include_graphics("../results/03_EDA_gender_vs_tumortype.png")
 
 ## Heatmap
 
-```{r}
-knitr::include_graphics("../results/04_heatmap_specific_genes.png")
+```{r, out.width =  "700px"}
+knitr::include_graphics("../results/04_heatmap.png")
 ```
 
 ## Dimentionality reduction 
 
-```{r, out.width =  "1025px"}
+```{r, out.width =  "800px"}
 knitr::include_graphics("../results/05_PCA.png")
 ```
 
 ## PCA analysis
 
-```{r, out.width =  "1025px"}
+```{r, out.width =  "800px"}
 knitr::include_graphics("../results/05_scree_plot.png")
 ```
 
 ## K-means clustering 
 
-```{r, out.width =  "1025px"}
+```{r, out.width =  "800px"}
 knitr::include_graphics("../results/05_PCA_kmeans.png")
 ```
 
 ## ANN model's representation 
 
-```{r,out.width = "900px"}
+```{r,out.width = "1000px"}
 knitr::include_graphics("../doc/Rmd_sup/ANN_structure.png")
 ```
 
 ## ANN representation
 
-```{r, out.width="900px", fig.align="center"}
-knitr::include_graphics("../results/05_ANN_performance.png")
+```{r, out.width="700px", fig.align="center"}
+knitr::include_graphics("../results/06_ANN_performance.png")
 ```
 
 

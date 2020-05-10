@@ -159,7 +159,7 @@ plot1 <- proteome_pca_cluster_aug %>%
         legend.key.size = unit (0.1, "cm")) +
   guides(colour = guide_legend( title.position = "top",
                                 nrow = 2,
-                                byrow = TRUE)) + myplot_aes
+                                byrow = TRUE))
 
 
 
@@ -182,7 +182,7 @@ plot2 <- proteome_pca_cluster_aug %>%
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
-  guides(colour = guide_legend(title.position="top")) + myplot_aes
+  guides(colour = guide_legend(title.position="top")) 
 
 
 
@@ -204,7 +204,7 @@ plot3 <- proteome_pca_cluster_aug %>%
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 10),
         legend.key.size = unit(0.1,"cm")) +
-  guides(colour = guide_legend(title.position="top")) + myplot_aes
+  guides(colour = guide_legend(title.position="top")) 
 
 (plot1 + plot2 + plot3) 
 

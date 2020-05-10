@@ -159,12 +159,12 @@ results %>%
   ggplot(mapping = aes(x = y_pred, y = y_true, fill = Correct)) +
   geom_jitter(pch = 21, size = 6, alpha = 0.3) +
   geom_text(data = my_counts, aes(x = y_pred, y = y_true, label = n),
-            size = 20, inherit.aes = FALSE) +
+            size = 18, inherit.aes = FALSE) +
   xlab('Class predicted by ANN') +
   ylab('Class from clinical data') +
   ggtitle(label = title, subtitle = sub_title) +
   theme_bw(base_family = "Times", 
-           base_size = 18) +
+           base_size = 14) +
   facet_wrap(~data_type, nrow = 1)
 
 # Save results

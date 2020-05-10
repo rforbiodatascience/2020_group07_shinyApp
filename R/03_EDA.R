@@ -54,7 +54,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                 size = 18)) 
 
-ggsave(filename = "results/03_EDA_age_distribution.png", device = "png")
+ggsave(filename = "results/03_EDA_age_distribution.png", 
+       device = "png",
+       height = 5)
 
 
 # Plot: Gender distribution 
@@ -69,7 +71,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 18))
 
-ggsave(filename = "results/03_EDA_gender_vs_tumortype.png", device = "png")   
+ggsave(filename = "results/03_EDA_gender_vs_tumortype.png", 
+       device = "png",
+       height = 5)   
 
 # Plot: Class distribution across patients
 # ------------------------------------------------------------------------------
@@ -83,7 +87,9 @@ joined_data_aug %>%
   theme(plot.title = element_text(hjust = 0.5, 
                                   size = 18))
 
-ggsave(filename = "results/03_EDA_class_distribution.png", device = "png")    
+ggsave(filename = "results/03_EDA_class_distribution.png",
+       device = "png",
+       height = 5)    
 
 
 # BOXPLOTS: combining 4x plots into one canvas
