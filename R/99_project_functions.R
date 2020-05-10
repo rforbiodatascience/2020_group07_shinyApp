@@ -165,7 +165,7 @@ plotting_boxplot <- function(data, subset_term, color,
 # Set up the plot's theme to be consistent across all plots
 myplot_aes <-   theme_bw(base_family = "Times", 
                          base_size = 18) +
-                theme(plot.title = 
-                        element_text(hjust = 0.5, 
-                                     size = 25))
+                theme(plot.title = element_text(hjust = 0.5, 
+                                                 size = 25),
+                      legend.position = "bottom")
 # ------------------------------------------------------------------------------
