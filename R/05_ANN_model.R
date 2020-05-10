@@ -146,8 +146,7 @@ my_counts <- results %>%
 
 # Visualise model performance
 # ------------------------------------------------------------------------------
-title <- paste0('Performance of Neural Network for cancer class prediction based on proteome data (',
-               'Total number of model parameters = ', count_params(model), ').')
+title <- paste0('Confusion matrix of Neural Network for cancer class prediction')
 sub_title <- paste0("Training Accuracy = ", acc_train, "%, n = ", nrow(X_train), ". ",
                    "Test Accuracy = ", acc_test, "%, n = ", nrow(X_test), ".")
 
@@ -157,20 +156,16 @@ my_counts$data_type <- factor(my_counts$data_type, levels = c('train','test'))
 
 # Plot data
 results %>%
-  ggplot(aes(x = y_pred, y = y_true, fill = Correct)) +
-  geom_jitter(pch = 21, size = 6, alpha = 0.4) +
+  ggplot(mapping = aes(x = y_pred, y = y_true, fill = Correct)) +
+  geom_jitter(pch = 21, size = 6, alpha = 0.3) +
   geom_text(data = my_counts, aes(x = y_pred, y = y_true, label = n),
             size = 20, inherit.aes = FALSE) +
-  xlab('Predicted (Class assigned by Keras/TensorFlow deep FFN)') +
-  ylab('Measured (Real class)') +
+  xlab('Class predicted by ANN') +
+  ylab('Class from clinical data') +
   ggtitle(label = title, subtitle = sub_title) +
-  theme_bw() +
-  theme(legend.position = "bottom") +
-  scale_color_manual(labels = c('No', 'Yes'),
-                     values = c('tomato','cornflowerblue')) +
+  theme_bw(base_family = "Times", 
+           base_size = 18) +
   facet_wrap(~data_type, nrow = 1)
 
 # Save results
-#ggsave(filename = "results/05_ANN_performance.png",device = "png")
-
-
+ggsave(filename = "results/05_ANN_performance.png", device = "png")
