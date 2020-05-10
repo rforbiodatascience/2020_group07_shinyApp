@@ -63,7 +63,7 @@ pca %>%
   theme_bw() +
   scale_y_continuous(labels = scales::percent) + myplot_aes
 
-ggsave(filename = "results/04_scree_plot.png", device = "png",
+ggsave(filename = "results/05_scree_plot.png", device = "png",
        height = 5)
 
 
@@ -95,7 +95,7 @@ proteome_pca_aug %>%
   scale_fill_manual(values = custom_colors) +
   myplot_aes
 
-ggsave(filename = "results/04_PCA.png", 
+ggsave(filename = "results/05_PCA.png", 
        device = "png",
        height = 5)
 
@@ -227,7 +227,7 @@ plot3 <- proteome_pca_cluster_aug %>%
 
 (plot1 + plot2 + plot3) 
 
-ggsave(filename = "results/04_PCA_kmeans.png", device = "png",
+ggsave(filename = "results/05_PCA_kmeans.png", device = "png",
        height = 5)
 
 
