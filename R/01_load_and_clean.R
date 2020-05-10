@@ -30,7 +30,9 @@ PAM50_clean <- PAM50 %>%
 ### Identify patient_ID replicates 
 replicates <- colnames(proteome_data) %>% 
   # Simplify ID name
-  str_replace_all(., '\\..*', '') %>% 
+  str_replace_all(string = .,
+                  pattern = '\\..*', 
+                  replacement = '') %>% 
   # Find replicates (true/false)
   duplicated() %>% 
   # Extract replicate column names (excluding first apperance)
@@ -77,8 +79,7 @@ clinical_data_clean <- clinical_data %>%
   semi_join(proteome_data_clean, 
             by = "patient_ID") %>% 
   # ID column first
-  select(patient_ID, 
-         everything()) 
+  select(patient_ID, everything()) 
 
 
 
