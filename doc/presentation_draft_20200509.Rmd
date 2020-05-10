@@ -133,19 +133,19 @@ knitr::include_graphics("../results/04_heatmap_specific_genes.png")
 ## Dimentionality reduction 
 
 ```{r, out.width =  "1025px"}
-knitr::include_graphics("../results/04_PCA.png")
+knitr::include_graphics("../results/05_PCA.png")
 ```
 
 ## PCA analysis
 
 ```{r, out.width =  "1025px"}
-knitr::include_graphics("../results/04_scree_plot.png")
+knitr::include_graphics("../results/05_scree_plot.png")
 ```
 
 ## K-means clustering 
 
 ```{r, out.width =  "1025px"}
-knitr::include_graphics("../results/04_PCA_kmeans.png")
+knitr::include_graphics("../results/05_PCA_kmeans.png")
 ```
 
 ## ANN model's representation 
